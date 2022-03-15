@@ -88,7 +88,7 @@ pub fn build_super_properties(browser_user_agent: impl AsRef<str>) -> String {
 
 pub fn build_cookies() -> String {
     let first = dcfduid();
-    return format!("__dcfduid={}; __sdcfduid={}", first, sdcfduid(&first));
+    return format!("__dcfduid={}; __sdcfduid={}; locale=en-US", first, sdcfduid(&first));
 }
 
 fn dcfduid() -> String {
