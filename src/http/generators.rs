@@ -68,7 +68,7 @@ pub fn build_super_properties(browser_user_agent: impl AsRef<str>) -> String {
     } else {
         "Safari"
     };
-    let browser_version = browser_user_agent.split("/").collect::<Vec<&str>>()[3]
+    let browser_version = browser_user_agent.split('/').collect::<Vec<&str>>()[3]
         .split(' ')
         .collect::<Vec<&str>>()[0];
 
@@ -81,9 +81,9 @@ pub fn build_super_properties(browser_user_agent: impl AsRef<str>) -> String {
         ..SuperProperties::default()
     };
 
-    let strsuper = serde_json::to_string(&super_properties).unwrap();
-    let return_val = encode(strsuper);
-    return return_val;
+    let strsuper = serde_json::to_string(&super_properties).expect("Invalid super properties generated.");
+    encode(strsuper)
+  
 }
 
 pub fn build_cookies() -> String {

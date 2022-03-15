@@ -243,11 +243,11 @@ impl From<Headers> for UserRequestContext {
     }
 }
 
-impl Into<Headers> for UserRequestContext {
-    fn into(self) -> Headers {
-        self.headers
-    }
-}
+// impl Into<Headers> for UserRequestContext {
+//     fn into(self) -> Headers {
+//         self.headers
+//     }
+// }
 
 impl UserRequestContext {
     pub fn new(user_agent: &String) -> UserRequestContext {
@@ -259,13 +259,16 @@ impl UserRequestContext {
         // headers.insert(CONNECTION, HeaderValue::from_static("keep-alive"));
         // headers.insert(HOST, HeaderValue::from_static("discord.com"));
 
-        headers.insert(USER_AGENT, HeaderValue::from_str(user_agent).unwrap());
+        
+        headers.insert(USER_AGENT, HeaderValue::from_str(user_agent).expect("Invalid user agent."));
 
-        headers.insert("cookie", HeaderValue::from_str(&cookies).unwrap());
+        headers.insert("cookie", HeaderValue::from_str(&cookies).expect("Invalid cookies."));
         headers.insert("x-debug-options", HeaderValue::from_static("bugReporterEnabled"));
 
         // This is bad. Fix later.
         headers.insert("x-discord-locale", HeaderValue::from_static("en-US"));
+        
+        #[allow(clippy::unwrap_used)]
         headers.insert("x-super-properties", HeaderValue::from_str(&props).unwrap());
 
         UserRequestContext {
@@ -274,10 +277,10 @@ impl UserRequestContext {
     }
 
     pub fn set_user_agent(mut self, user_agent: &String) -> Self {
-        self.headers.insert(USER_AGENT, HeaderValue::from_str(user_agent).unwrap());
+        self.headers.insert(USER_AGENT, HeaderValue::from_str(user_agent).expect("Invalid user agent."));
         self.headers.insert(
             "x-super-properties",
-            HeaderValue::from_str(&build_super_properties(user_agent)).unwrap(),
+            HeaderValue::from_str(&build_super_properties(user_agent)).expect("Invalid user agent for super properties."),
         );
 
         self
@@ -350,7 +353,7 @@ impl Http {
         //     format!("Bot {}", token)
         // };
 
-        Self::new(Arc::new(built), &token)
+        Self::new(Arc::new(built), token)
     }
 
     #[cfg(feature = "unstable_discord_api")]
@@ -3648,7 +3651,7 @@ impl Http {
                 .headers
                 .clone()
                 .into_iter()
-                .for_each(|(k, v)| drop(headers.insert(k.unwrap(), v)));
+                .for_each(|(k, v)| drop(headers.insert(k.expect("Header inside Http::request is None"), v)));
             req.headers = Some(headers);
         }
 
