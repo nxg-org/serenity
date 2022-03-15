@@ -230,7 +230,7 @@ impl<'a> Future for HttpBuilder<'a> {
 }
 
 #[repr(transparent)]
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct UserRequestContext {
     headers: reqwest::header::HeaderMap,
 }
