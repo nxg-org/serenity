@@ -3667,7 +3667,10 @@ impl Http {
     #[instrument]
     pub async fn request(&self, mut req: Request<'_>) -> Result<ReqwestResponse> {
         if let Some(user_ctx) = &self.user_ctx {
-            req.headers = req.headers.take().unwrap_or_default().extend(user_ctx.headers.clone());
+            let mut org_headers = req.headers.unwrap_or_default();
+            org_headers.extend(user_ctx.headers.clone());
+
+            req.headers = Some(org_headers);
 
             // let mut headers = req.headers.take().unwrap_or_default().extend();
             // user_ctx
