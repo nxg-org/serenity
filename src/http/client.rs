@@ -310,6 +310,7 @@ impl fmt::Debug for Http {
             .field("ratelimiter", &self.ratelimiter)
             .field("ratelimiter_disabled", &self.ratelimiter_disabled)
             .field("proxy", &self.proxy)
+            .field("user_ctx", &self.user_ctx)
             .finish()
     }
 }
