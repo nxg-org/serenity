@@ -3669,16 +3669,7 @@ impl Http {
         if let Some(user_ctx) = &self.user_ctx {
             let mut org_headers = req.headers.unwrap_or_default();
             org_headers.extend(user_ctx.headers.clone());
-
             req.headers = Some(org_headers);
-
-            // let mut headers = req.headers.take().unwrap_or_default().extend();
-            // user_ctx
-            //     .headers
-            //     .clone()
-            //     .into_iter()
-            //     .for_each(|(k, v)| drop(headers.insert(k.expect("Header inside Http::request is None"), v)));
-            // req.headers = Some(headers);
         }
 
        
@@ -3686,11 +3677,9 @@ impl Http {
 
         let response = if self.ratelimiter_disabled {
             let request = req.build(&self.client, &self.token, self.proxy.as_ref())?.build()?;
-            println!("{:?}", &request.headers());
             self.client.execute(request).await?
         } else {
             let ratelimiting_req = RatelimitedRequest::from(req);
-            
             self.ratelimiter.perform(ratelimiting_req).await?
         };
 
