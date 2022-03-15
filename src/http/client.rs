@@ -3667,14 +3667,18 @@ impl Http {
     #[instrument]
     pub async fn request(&self, mut req: Request<'_>) -> Result<ReqwestResponse> {
         if let Some(user_ctx) = &self.user_ctx {
-            let mut headers = req.headers.take().unwrap_or_default();
-            user_ctx
-                .headers
-                .clone()
-                .into_iter()
-                .for_each(|(k, v)| drop(headers.insert(k.expect("Header inside Http::request is None"), v)));
-            req.headers = Some(headers);
+            req.headers = req.headers.take().unwrap_or_default().extend(user_ctx.headers.clone());
+
+            // let mut headers = req.headers.take().unwrap_or_default().extend();
+            // user_ctx
+            //     .headers
+            //     .clone()
+            //     .into_iter()
+            //     .for_each(|(k, v)| drop(headers.insert(k.expect("Header inside Http::request is None"), v)));
+            // req.headers = Some(headers);
         }
+
+       
 
         println!("{:?}", &req.headers);
         let response = if self.ratelimiter_disabled {
