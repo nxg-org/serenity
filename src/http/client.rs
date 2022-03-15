@@ -3676,6 +3676,7 @@ impl Http {
             req.headers = Some(headers);
         }
 
+        println!("{:?}", &req.headers);
         let response = if self.ratelimiter_disabled {
             let request = req.build(&self.client, &self.token, self.proxy.as_ref())?.build()?;
             self.client.execute(request).await?
@@ -3684,6 +3685,7 @@ impl Http {
             self.ratelimiter.perform(ratelimiting_req).await?
         };
 
+      
         if response.status().is_success() {
             Ok(response)
         } else {
