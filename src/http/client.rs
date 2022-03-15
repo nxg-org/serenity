@@ -275,14 +275,7 @@ impl Http {
         let builder = configure_client_backend(Client::builder());
         let built = builder.build().expect("Cannot build reqwest::Client");
 
-        // let trimmed = token.trim();
-        // let token = if trimmed.starts_with("Bot ") || trimmed.starts_with("Bearer ") {
-        //     token.to_string()
-        // } else {
-        //     format!("Bot {}", token)
-        // };
-
-        Self::new(Arc::new(built), &token)
+        Self::new(Arc::new(built), token)
     }
 
     #[cfg(feature = "unstable_discord_api")]

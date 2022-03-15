@@ -164,8 +164,8 @@ pub(crate) fn dispatch<'rec>(
             (None, None) => {
                 event.update(&cache_and_http).await;
 
+                #[cfg(feature = "framework")]
                 if let DispatchEvent::Model(Event::MessageCreate(event)) = event {
-                    #[cfg(feature = "framework")]
                     {
                         #[cfg(not(feature = "cache"))]
                         let context = context(data, runner_tx, shard_id, &cache_and_http.http);
