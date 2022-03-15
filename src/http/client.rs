@@ -230,7 +230,7 @@ impl<'a> Future for HttpBuilder<'a> {
 }
 
 #[repr(transparent)]
-#[derive(Default, Debug)]
+#[derive(Debug)]
 pub struct UserRequestContext {
     headers: reqwest::header::HeaderMap,
 }
@@ -249,8 +249,28 @@ impl From<Headers> for UserRequestContext {
 //     }
 // }
 
+impl Default for UserRequestContext {
+    fn default() -> Self {
+        let mut headers = reqwest::header::HeaderMap::new();
+        let cookies = build_cookies();
+
+        // headers.insert(ACCEPT, HeaderValue::from_static("*/*"));
+        // headers.insert(CONNECTION, HeaderValue::from_static("keep-alive"));
+        // headers.insert(HOST, HeaderValue::from_static("discord.com"));
+
+        headers.insert("cookie", HeaderValue::from_str(&cookies).expect("Invalid cookies."));
+        headers.insert("x-debug-options", HeaderValue::from_static("bugReporterEnabled"));
+
+        // This is bad. Fix later.
+        headers.insert("x-discord-locale", HeaderValue::from_static("en-US"));
+        
+
+        Self { headers }
+    }
+}
+
 impl UserRequestContext {
-    pub fn new(user_agent: &String) -> UserRequestContext {
+    pub fn new(user_agent: &String) -> Self {
         let mut headers = reqwest::header::HeaderMap::new();
         let props = build_super_properties(user_agent);
         let cookies = build_cookies();
@@ -271,7 +291,7 @@ impl UserRequestContext {
         #[allow(clippy::unwrap_used)]
         headers.insert("x-super-properties", HeaderValue::from_str(&props).unwrap());
 
-        UserRequestContext {
+        Self {
             headers,
         }
     }
