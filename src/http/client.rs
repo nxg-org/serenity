@@ -13,16 +13,7 @@ use bytes::buf::Buf;
 use futures::future::BoxFuture;
 use percent_encoding::{utf8_percent_encode, NON_ALPHANUMERIC};
 use reqwest::{
-    header::{
-        HeaderMap as Headers,
-        HeaderValue,
-        ACCEPT,
-        AUTHORIZATION,
-        CONNECTION,
-        CONTENT_TYPE,
-        HOST,
-        USER_AGENT,
-    },
+    header::{HeaderMap as Headers, HeaderValue, AUTHORIZATION, CONTENT_TYPE, USER_AGENT},
     StatusCode,
     Url,
 };
@@ -267,7 +258,7 @@ impl UserRequestContext {
         // headers.insert(ACCEPT, HeaderValue::from_static("*/*"));
         // headers.insert(CONNECTION, HeaderValue::from_static("keep-alive"));
         // headers.insert(HOST, HeaderValue::from_static("discord.com"));
-        
+
         headers.insert(USER_AGENT, HeaderValue::from_str(user_agent).unwrap());
 
         headers.insert("cookie", HeaderValue::from_str(&cookies).unwrap());
