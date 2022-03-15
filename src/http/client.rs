@@ -373,7 +373,7 @@ impl Http {
     }
 
     pub fn set_user_agent(mut self, user_agent: &String) -> Self {
-        if &self.token[..3] == "Bot" {
+        if &self.token[..3] != "Bot" {
             self.user_ctx = Some(self.user_ctx.unwrap_or_default().set_user_agent(user_agent));
         }
 
