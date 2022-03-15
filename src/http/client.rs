@@ -264,10 +264,10 @@ impl UserRequestContext {
         let props = build_super_properties(user_agent);
         let cookies = build_cookies();
 
-        headers.insert(ACCEPT, HeaderValue::from_static("*/*"));
-        headers.insert(CONNECTION, HeaderValue::from_static("keep-alive"));
-        headers.insert(CONTENT_TYPE, HeaderValue::from_static("application/json"));
-        headers.insert(HOST, HeaderValue::from_static("discord.com"));
+        // headers.insert(ACCEPT, HeaderValue::from_static("*/*"));
+        // headers.insert(CONNECTION, HeaderValue::from_static("keep-alive"));
+        // headers.insert(HOST, HeaderValue::from_static("discord.com"));
+        
         headers.insert(USER_AGENT, HeaderValue::from_str(user_agent).unwrap());
 
         headers.insert("cookie", HeaderValue::from_str(&cookies).unwrap());
@@ -3651,16 +3651,6 @@ impl Http {
     /// ```
     #[instrument]
     pub async fn request(&self, mut req: Request<'_>) -> Result<ReqwestResponse> {
-        // if let Some(user_ctx) = &self.user_ctx {
-        //     if let Some(org) = &mut req.headers {
-        //         for (key, value) in &user_ctx.headers {
-        //             org.insert(`, *value.borrow());
-        //         }
-        //     } else {
-        //         req.headers = Some(user_ctx.headers);
-        //     }
-        // }
-
         if let Some(user_ctx) = &self.user_ctx {
             let mut headers = req.headers.take().unwrap_or_default();
             user_ctx
