@@ -4520,10 +4520,10 @@
                     <span class="ident">cache</span>.<span class="ident">private_channels</span>.<span class="ident">write</span>().<span class="kw">await</span>.<span class="ident">insert</span>(<span class="ident">channel_id</span>, <span class="ident">channel</span>);
                 },
                 <span class="ident">Channel::Guild</span>(<span class="ident">guild</span>) =&gt; {
-                    <span class="macro">unimplemented!</span>(<span class="string">&quot;received guild channel in DMs: {guild:?}&quot;</span>)
+                    <span class="macro">unimplemented!</span>(<span class="string">&quot;received guild channel in DMs: {:?}&quot;</span>, <span class="ident">guild</span>)
                 },
                 <span class="ident">Channel::Category</span>(<span class="ident">category</span>) =&gt; {
-                    <span class="macro">unimplemented!</span>(<span class="string">&quot;received category in DMs: {category:?}&quot;</span>)
+                    <span class="macro">unimplemented!</span>(<span class="string">&quot;received category in DMs: {:?}&quot;</span>, <span class="ident">category</span>)
                 },
             }
         }
@@ -6492,5 +6492,5 @@
     }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="serenity" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.61.0-nightly (458262b13 2022-03-09)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="serenity" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.61.0-nightly (58f11791a 2022-03-17)" ></div>
 </body></html>
