@@ -470,7 +470,7 @@ impl<'de> Deserialize<'de> for AuditLogs {
             Webhooks,
             #[serde(rename = "users")]
             Users,
-            // TODO(field added by Discord, undocumented) #[serde(rename = "integrations")] Integrations,
+            /* TODO(field added by Discord, undocumented) #[serde(rename = "integrations")] Integrations, */
         }
 
         struct EntriesVisitor;

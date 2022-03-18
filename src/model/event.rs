@@ -1271,10 +1271,10 @@ impl CacheUpdate for ReadyEvent {
                     cache.private_channels.write().await.insert(channel_id, channel);
                 },
                 Channel::Guild(guild) => {
-                    unimplemented!("received guild channel in DMs: {guild:?}")
+                    unimplemented!("received guild channel in DMs: {:?}", guild)
                 },
                 Channel::Category(category) => {
-                    unimplemented!("received category in DMs: {category:?}")
+                    unimplemented!("received category in DMs: {:?}", category)
                 },
             }
         }
