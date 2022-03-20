@@ -102,7 +102,13 @@ impl<'a> Request<'a> {
             builder = builder.body(Vec::from(bytes));
         }
 
-        let mut headers = Headers::with_capacity(4);
+        let mut headers = if let Some(request_headers) = request_headers {
+            let mut h = request_headers.clone();
+            h.reserve(4);
+            h
+        } else {
+            Headers::with_capacity(4)
+        };
         headers.insert(USER_AGENT, HeaderValue::from_static(constants::USER_AGENT));
         headers
             .insert(AUTHORIZATION, HeaderValue::from_str(token).map_err(HttpError::InvalidHeader)?);
@@ -118,12 +124,36 @@ impl<'a> Request<'a> {
             HeaderValue::from_str(&body.unwrap_or(&Vec::new()).len().to_string())
                 .map_err(HttpError::InvalidHeader)?,
         );
-
-        if let Some(ref request_headers) = request_headers {
-            headers.extend(request_headers.clone());
+        
+        pub(super) mod reqwest_private {
+            // Hey guys, I don't use all of this stuff. :(
+            #![allow(unused)]
+            pub struct Request {
+                method: reqwest::Method,
+                url: reqwest::Url,
+                pub headers: reqwest::header::HeaderMap,
+                body: Option<reqwest::Body>,
+                timeout: Option<std::time::Duration>,
+                version: http_crate::Version,
+            }
+            pub struct RequestBuilder {
+                client: reqwest::Client,
+                pub request: reqwest::Result<Request>,
+            }
         }
 
-        Ok(builder.headers(headers))
+        // only replace headers that don't already exist
+        if let Ok(req) = &mut unsafe{ core::mem::transmute::<_, &mut reqwest_private::RequestBuilder>(&mut builder)}.request {
+            for (k, v) in headers {
+                if let Some(k) = k {
+                    if let None = req.headers.get(&k) {
+                        req.headers.insert(k, v);
+                    }
+                }
+            }
+        }
+
+        Ok(builder)
     }
 
     pub fn body_ref(&self) -> &Option<&'a [u8]> {

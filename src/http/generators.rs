@@ -52,6 +52,82 @@ impl Default for SuperProperties<'_> {
     }
 }
 
+// impl<'a> SuperProperties<'a> {
+//     fn new(user_agent: &'a str) {
+//         enum OS {
+//             Windows,
+//             Linux,
+//             Apple,
+//         };
+//         impl OS {
+//             fn os(&self)-> &'static str {
+//                 match self {
+//                     OS::Windows => "Windows",
+//                     OS::Linux => "Linux",
+//                     OS::Apple => "Apple",
+//                 }
+//             }
+//             fn os_version(&self) -> &'static str {
+//                 match self {
+//                     OS::Windows => "10",
+//                     OS::Linux => "",
+//                     OS::Apple => "10_9_3",
+//                 }
+//             }
+//         }
+//         enum Browser {
+//             Chrome,
+//             Firefox,
+//             Safari,
+//         }
+//         impl Browser {
+//             fn browser(&self) -> &'static str {
+//                 match self {
+//                     Browser::Chrome => "Chrome",
+//                     Browser::Firefox => "Firefox",
+//                     Browser::Safari => "Safari",
+//                 }
+//             }
+//         }
+//     let os = if user_agent.contains("Windows") {
+//         OS::Windows
+//     } else if user_agent.contains("Linux") {
+//         OS::Linux
+//     } else {
+//         OS::Apple
+//     };
+//     let browser = if user_agent.contains("Chrome") {
+//         Browser::Chrome
+//     } else if user_agent.contains("Firefox") {
+//         Browser::Firefox
+//     } else {
+//         Browser::Safari
+//     };
+//     let browser_version = browser_user_agent.split('/').collect::<Vec<&str>>()[3]
+//         .split(' ')
+//         .collect::<Vec<&str>>()[0];
+
+//     let super_properties = SuperProperties {
+//         os: os.os(),
+//         os_version: os.os_version(),
+//         browser: browser.browser(),
+//         browser_user_agent,
+//         browser_version,
+//         ..SuperProperties::default()
+//     };
+
+//     // let strsuper = serde_json::to_string(&super_properties).expect("Invalid super properties generated.");
+//     // encode(strsuper);
+//         if user_agent.contains("Windows") {
+
+//         }
+
+//         Self {
+
+//         }
+//     }
+// }
+
 pub fn build_super_properties(browser_user_agent: impl AsRef<str>) -> String {
     let browser_user_agent = browser_user_agent.as_ref();
     let (os, os_version) = if browser_user_agent.contains("Windows") {

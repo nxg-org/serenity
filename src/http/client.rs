@@ -22,6 +22,7 @@ use serde::de::DeserializeOwned;
 use serde_json::json;
 use tokio::{fs::File, io::AsyncReadExt};
 use tracing::{debug, instrument, trace};
+use once_cell::sync::OnceCell;
 
 use super::{
     ratelimiting::{RatelimitedRequest, Ratelimiter},
@@ -270,7 +271,7 @@ impl Default for UserRequestContext {
 }
 
 impl UserRequestContext {
-    pub fn new(user_agent: &String) -> Self {
+    pub fn new(user_agent: &str) -> Self {
         let mut headers = reqwest::header::HeaderMap::new();
         let props = build_super_properties(user_agent);
         let cookies = build_cookies();
@@ -278,7 +279,6 @@ impl UserRequestContext {
         // headers.insert(ACCEPT, HeaderValue::from_static("*/*"));
         // headers.insert(CONNECTION, HeaderValue::from_static("keep-alive"));
         // headers.insert(HOST, HeaderValue::from_static("discord.com"));
-
         
         headers.insert(USER_AGENT, HeaderValue::from_str(user_agent).expect("Invalid user agent."));
 
@@ -296,13 +296,12 @@ impl UserRequestContext {
         }
     }
 
-    pub fn set_user_agent(mut self, user_agent: &String) -> Self {
+    pub fn set_user_agent(mut self, user_agent: &str) -> Self {
         self.headers.insert(USER_AGENT, HeaderValue::from_str(user_agent).expect("Invalid user agent."));
         self.headers.insert(
             "x-super-properties",
             HeaderValue::from_str(&build_super_properties(user_agent)).expect("Invalid user agent for super properties."),
         );
-
         self
     }
 }
@@ -704,7 +703,7 @@ impl Http {
     ///
     /// let _result = http.create_guild(&map).await?;
     /// #     Ok(())
-    /// # }
+    /// # }use once_cell::sync::OnceCell;
     /// ```
     ///
     /// [`Shard`]: crate::gateway::Shard
@@ -840,10 +839,14 @@ impl Http {
     /// Creates a private channel with a user.
     pub async fn create_private_channel(&self, map: &Value) -> Result<PrivateChannel> {
         let body = serde_json::to_vec(map)?;
-
+        static HEADERS: OnceCell<Headers<HeaderValue>> = OnceCell::new();
         self.fire(Request {
             body: Some(&body),
-            headers: None,
+            headers: Some(HEADERS.get_or_init(|| {
+                let mut headers = Headers::with_capacity(1);
+                headers.insert("x-context-properties", HeaderValue::from_static("eyJsb2NhdGlvbiI6IlVzZXIgUHJvZmlsZSJ9"));
+                headers
+            }).clone()),
             route: RouteInfo::CreatePrivateChannel,
         })
         .await
@@ -1987,13 +1990,17 @@ impl Http {
     ) -> Result<Option<Message>> {
         let body = serde_json::to_vec(map)?;
 
-        let mut headers = Headers::new();
-        headers.insert(CONTENT_TYPE, HeaderValue::from_static("application/json"));
-
+        static HEADERS: OnceCell<Headers<HeaderValue>> = OnceCell::new();
+        
+       
         let response = self
             .request(Request {
                 body: Some(&body),
-                headers: Some(headers),
+                headers: Some(HEADERS.get_or_init(||{
+                    let mut headers = Headers::new();
+                    headers.insert(CONTENT_TYPE, HeaderValue::from_static("application/json"));
+                    headers
+                }).clone()),    
                 route: RouteInfo::ExecuteWebhook {
                     token,
                     wait,
@@ -3617,9 +3624,12 @@ impl Http {
     /// [`Error::Http`]: crate::error::Error::Http
     /// [`Error::Json`]: crate::error::Error::Json
     pub async fn fire<T: DeserializeOwned>(&self, req: Request<'_>) -> Result<T> {
+        println!("{:#?}", &req);
         let response = self.request(req).await?;
-
-        response.json::<T>().await.map_err(From::from)
+        let res_json = response.json::<serde_json::Value>().await;
+        println!("{:#?}", &res_json);
+        serde_json::from_value(res_json.unwrap()).map_err(From::from)
+        // response.json::<T>().await.map_err(From::from)
     }
 
     /// Performs a request, ratelimiting it if necessary.
@@ -3665,9 +3675,6 @@ impl Http {
             req.headers = Some(org_headers);
         }
 
-       
-
-
         let response = if self.ratelimiter_disabled {
             let request = req.build(&self.client, &self.token, self.proxy.as_ref())?.build()?;
             self.client.execute(request).await?
@@ -3676,7 +3683,6 @@ impl Http {
             self.ratelimiter.perform(ratelimiting_req).await?
         };
 
-      
         if response.status().is_success() {
             Ok(response)
         } else {
