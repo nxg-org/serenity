@@ -340,7 +340,7 @@ pub struct AuditLogEntry {
     pub changes: Option<Vec<Change>>,
     /// The id of this entry.
     pub id: AuditLogEntryId,
-    /// Some optional data assosiated with this entry.
+    /// Some optional data associated with this entry.
     pub options: Option<Options>,
 }
 
@@ -470,7 +470,7 @@ impl<'de> Deserialize<'de> for AuditLogs {
             Webhooks,
             #[serde(rename = "users")]
             Users,
-            // TODO(field added by Discord, undocumented) #[serde(rename = "integrations")] Integrations,
+            /* TODO(field added by Discord, undocumented) #[serde(rename = "integrations")] Integrations, */
         }
 
         struct EntriesVisitor;

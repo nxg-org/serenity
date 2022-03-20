@@ -1,4 +1,4 @@
-#![allow(deprecated)] // This is done beause it can't be used inside macro definitions.
+#![allow(deprecated)] // This is done because it can't be used inside macro definitions.
 //! All the events this library handles.
 
 #[cfg(feature = "cache")]
@@ -1271,10 +1271,10 @@ impl CacheUpdate for ReadyEvent {
                     cache.private_channels.write().await.insert(channel_id, channel);
                 },
                 Channel::Guild(guild) => {
-                    unimplemented!("received guild channel in DMs: {guild:?}")
+                    unimplemented!("received guild channel in DMs: {:?}", guild)
                 },
                 Channel::Category(category) => {
-                    unimplemented!("received category in DMs: {category:?}")
+                    unimplemented!("received category in DMs: {:?}", category)
                 },
             }
         }
@@ -1915,7 +1915,7 @@ pub enum Event {
     MessageUpdate(MessageUpdateEvent),
     /// A member's presence state (or username or avatar) has changed
     PresenceUpdate(PresenceUpdateEvent),
-    /// The precense list of the user's friends should be replaced entirely
+    /// The presence list of the user's friends should be replaced entirely
     PresencesReplace(PresencesReplaceEvent),
     /// A reaction was added to a message.
     ///

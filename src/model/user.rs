@@ -1108,7 +1108,9 @@ impl UserId {
         }
 
         let map = json!({
-            "recipient_id": self.0,
+            "recipient_ids": [
+                self.0.to_string(),
+            ]
         });
 
         cache_http.http().create_private_channel(&map).await
