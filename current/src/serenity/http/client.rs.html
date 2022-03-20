@@ -3632,6 +3632,124 @@
 <span id="3627">3627</span>
 <span id="3628">3628</span>
 <span id="3629">3629</span>
+<span id="3630">3630</span>
+<span id="3631">3631</span>
+<span id="3632">3632</span>
+<span id="3633">3633</span>
+<span id="3634">3634</span>
+<span id="3635">3635</span>
+<span id="3636">3636</span>
+<span id="3637">3637</span>
+<span id="3638">3638</span>
+<span id="3639">3639</span>
+<span id="3640">3640</span>
+<span id="3641">3641</span>
+<span id="3642">3642</span>
+<span id="3643">3643</span>
+<span id="3644">3644</span>
+<span id="3645">3645</span>
+<span id="3646">3646</span>
+<span id="3647">3647</span>
+<span id="3648">3648</span>
+<span id="3649">3649</span>
+<span id="3650">3650</span>
+<span id="3651">3651</span>
+<span id="3652">3652</span>
+<span id="3653">3653</span>
+<span id="3654">3654</span>
+<span id="3655">3655</span>
+<span id="3656">3656</span>
+<span id="3657">3657</span>
+<span id="3658">3658</span>
+<span id="3659">3659</span>
+<span id="3660">3660</span>
+<span id="3661">3661</span>
+<span id="3662">3662</span>
+<span id="3663">3663</span>
+<span id="3664">3664</span>
+<span id="3665">3665</span>
+<span id="3666">3666</span>
+<span id="3667">3667</span>
+<span id="3668">3668</span>
+<span id="3669">3669</span>
+<span id="3670">3670</span>
+<span id="3671">3671</span>
+<span id="3672">3672</span>
+<span id="3673">3673</span>
+<span id="3674">3674</span>
+<span id="3675">3675</span>
+<span id="3676">3676</span>
+<span id="3677">3677</span>
+<span id="3678">3678</span>
+<span id="3679">3679</span>
+<span id="3680">3680</span>
+<span id="3681">3681</span>
+<span id="3682">3682</span>
+<span id="3683">3683</span>
+<span id="3684">3684</span>
+<span id="3685">3685</span>
+<span id="3686">3686</span>
+<span id="3687">3687</span>
+<span id="3688">3688</span>
+<span id="3689">3689</span>
+<span id="3690">3690</span>
+<span id="3691">3691</span>
+<span id="3692">3692</span>
+<span id="3693">3693</span>
+<span id="3694">3694</span>
+<span id="3695">3695</span>
+<span id="3696">3696</span>
+<span id="3697">3697</span>
+<span id="3698">3698</span>
+<span id="3699">3699</span>
+<span id="3700">3700</span>
+<span id="3701">3701</span>
+<span id="3702">3702</span>
+<span id="3703">3703</span>
+<span id="3704">3704</span>
+<span id="3705">3705</span>
+<span id="3706">3706</span>
+<span id="3707">3707</span>
+<span id="3708">3708</span>
+<span id="3709">3709</span>
+<span id="3710">3710</span>
+<span id="3711">3711</span>
+<span id="3712">3712</span>
+<span id="3713">3713</span>
+<span id="3714">3714</span>
+<span id="3715">3715</span>
+<span id="3716">3716</span>
+<span id="3717">3717</span>
+<span id="3718">3718</span>
+<span id="3719">3719</span>
+<span id="3720">3720</span>
+<span id="3721">3721</span>
+<span id="3722">3722</span>
+<span id="3723">3723</span>
+<span id="3724">3724</span>
+<span id="3725">3725</span>
+<span id="3726">3726</span>
+<span id="3727">3727</span>
+<span id="3728">3728</span>
+<span id="3729">3729</span>
+<span id="3730">3730</span>
+<span id="3731">3731</span>
+<span id="3732">3732</span>
+<span id="3733">3733</span>
+<span id="3734">3734</span>
+<span id="3735">3735</span>
+<span id="3736">3736</span>
+<span id="3737">3737</span>
+<span id="3738">3738</span>
+<span id="3739">3739</span>
+<span id="3740">3740</span>
+<span id="3741">3741</span>
+<span id="3742">3742</span>
+<span id="3743">3743</span>
+<span id="3744">3744</span>
+<span id="3745">3745</span>
+<span id="3746">3746</span>
+<span id="3747">3747</span>
 </pre><pre class="rust"><code><span class="attribute">#![<span class="ident">allow</span>(<span class="ident">clippy::missing_errors_doc</span>)]</span>
 <span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">collections::BTreeMap</span>,
@@ -3667,6 +3785,7 @@
     <span class="ident">HttpError</span>,
 };
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::constants</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::http::generators</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::http::routing::Route</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::internal::prelude</span>::<span class="kw-2">*</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;unstable_discord_api&quot;</span>)]</span>
@@ -3702,6 +3821,7 @@
     <span class="ident">ratelimiter</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Ratelimiter</span><span class="op">&gt;</span>,
     <span class="ident">ratelimiter_disabled</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
     <span class="ident">token</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="ident">user_ctx</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">UserRequestContext</span><span class="op">&gt;</span>,
     <span class="ident">proxy</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Url</span><span class="op">&gt;</span>,
     <span class="ident">fut</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">BoxFuture</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Http</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;unstable_discord_api&quot;</span>)]</span>
@@ -3716,6 +3836,7 @@
             <span class="ident">ratelimiter</span>: <span class="prelude-val">None</span>,
             <span class="ident">ratelimiter_disabled</span>: <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
             <span class="ident">token</span>: <span class="prelude-val">None</span>,
+            <span class="ident">user_ctx</span>: <span class="prelude-val">None</span>,
             <span class="ident">proxy</span>: <span class="prelude-val">None</span>,
             <span class="ident">fut</span>: <span class="prelude-val">None</span>,
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;unstable_discord_api&quot;</span>)]</span>
@@ -3740,8 +3861,8 @@
         <span class="self">self</span>
     }
 
-    <span class="doccomment">/// Sets a token for the bot. If the token is not prefixed &quot;Bot &quot;, this</span>
-    <span class="doccomment">/// method will automatically do so.</span>
+    <span class="doccomment">/// Sets a token for the bot.</span>
+    <span class="doccomment">/// Prefix the token with &quot;Bot &quot; to use a bot token.</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">token</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">token</span>: <span class="kw">impl</span> <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
         <span class="kw">let</span> <span class="ident">token</span> <span class="op">=</span> <span class="ident">token</span>.<span class="ident">as_ref</span>().<span class="ident">trim</span>();
@@ -3806,6 +3927,12 @@
 
         <span class="prelude-val">Ok</span>(<span class="self">self</span>)
     }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">user_agent</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">user_agent</span>: <span class="kw-2">&amp;</span><span class="ident">String</span>) -&gt; <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">user_ctx</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">user_ctx</span>.<span class="ident">unwrap_or_default</span>().<span class="ident">set_user_agent</span>(<span class="ident">user_agent</span>));
+
+        <span class="self">self</span>
+    }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Future</span> <span class="kw">for</span> <span class="ident">HttpBuilder</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
@@ -3834,6 +3961,7 @@
 
             <span class="kw">let</span> <span class="ident">ratelimiter_disabled</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">ratelimiter_disabled</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>();
             <span class="kw">let</span> <span class="ident">proxy</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">proxy</span>.<span class="ident">take</span>();
+            <span class="kw">let</span> <span class="ident">user_ctx</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">user_ctx</span>.<span class="ident">take</span>();
 
             <span class="self">self</span>.<span class="ident">fut</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">Box::pin</span>(<span class="kw">async</span> <span class="kw">move</span> {
                 <span class="prelude-val">Ok</span>(<span class="ident">Http</span> {
@@ -3842,6 +3970,7 @@
                     <span class="ident">ratelimiter_disabled</span>,
                     <span class="ident">proxy</span>,
                     <span class="ident">token</span>,
+                    <span class="ident">user_ctx</span>,
                     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;unstable_discord_api&quot;</span>)]</span>
                     <span class="ident">application_id</span>,
                 })
@@ -3849,6 +3978,84 @@
         }
 
         <span class="self">self</span>.<span class="ident">fut</span>.<span class="ident">as_mut</span>().<span class="ident">unwrap</span>().<span class="ident">as_mut</span>().<span class="ident">poll</span>(<span class="ident">ctx</span>)
+    }
+}
+
+<span class="attribute">#[<span class="ident">repr</span>(<span class="ident">transparent</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">UserRequestContext</span> {
+    <span class="ident">headers</span>: <span class="ident">reqwest::header::HeaderMap</span>,
+}
+
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Headers</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">UserRequestContext</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">headers</span>: <span class="ident">Headers</span>) -&gt; <span class="self">Self</span> {
+        <span class="self">Self</span> {
+            <span class="ident">headers</span>,
+        }
+    }
+}
+
+<span class="comment">// impl Into&lt;Headers&gt; for UserRequestContext {</span>
+<span class="comment">//     fn into(self) -&gt; Headers {</span>
+<span class="comment">//         self.headers</span>
+<span class="comment">//     }</span>
+<span class="comment">// }</span>
+
+<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">UserRequestContext</span> {
+    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">headers</span> <span class="op">=</span> <span class="ident">reqwest::header::HeaderMap::new</span>();
+        <span class="kw">let</span> <span class="ident">cookies</span> <span class="op">=</span> <span class="ident">build_cookies</span>();
+
+        <span class="comment">// headers.insert(ACCEPT, HeaderValue::from_static(&quot;*/*&quot;));</span>
+        <span class="comment">// headers.insert(CONNECTION, HeaderValue::from_static(&quot;keep-alive&quot;));</span>
+        <span class="comment">// headers.insert(HOST, HeaderValue::from_static(&quot;discord.com&quot;));</span>
+
+        <span class="ident">headers</span>.<span class="ident">insert</span>(<span class="string">&quot;cookie&quot;</span>, <span class="ident">HeaderValue::from_str</span>(<span class="kw-2">&amp;</span><span class="ident">cookies</span>).<span class="ident">expect</span>(<span class="string">&quot;Invalid cookies.&quot;</span>));
+        <span class="ident">headers</span>.<span class="ident">insert</span>(<span class="string">&quot;x-debug-options&quot;</span>, <span class="ident">HeaderValue::from_static</span>(<span class="string">&quot;bugReporterEnabled&quot;</span>));
+
+        <span class="comment">// This is bad. Fix later.</span>
+        <span class="ident">headers</span>.<span class="ident">insert</span>(<span class="string">&quot;x-discord-locale&quot;</span>, <span class="ident">HeaderValue::from_static</span>(<span class="string">&quot;en-US&quot;</span>));
+        
+
+        <span class="self">Self</span> { <span class="ident">headers</span> }
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">UserRequestContext</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">user_agent</span>: <span class="kw-2">&amp;</span><span class="ident">String</span>) -&gt; <span class="self">Self</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">headers</span> <span class="op">=</span> <span class="ident">reqwest::header::HeaderMap::new</span>();
+        <span class="kw">let</span> <span class="ident">props</span> <span class="op">=</span> <span class="ident">build_super_properties</span>(<span class="ident">user_agent</span>);
+        <span class="kw">let</span> <span class="ident">cookies</span> <span class="op">=</span> <span class="ident">build_cookies</span>();
+
+        <span class="comment">// headers.insert(ACCEPT, HeaderValue::from_static(&quot;*/*&quot;));</span>
+        <span class="comment">// headers.insert(CONNECTION, HeaderValue::from_static(&quot;keep-alive&quot;));</span>
+        <span class="comment">// headers.insert(HOST, HeaderValue::from_static(&quot;discord.com&quot;));</span>
+
+        
+        <span class="ident">headers</span>.<span class="ident">insert</span>(<span class="ident">USER_AGENT</span>, <span class="ident">HeaderValue::from_str</span>(<span class="ident">user_agent</span>).<span class="ident">expect</span>(<span class="string">&quot;Invalid user agent.&quot;</span>));
+
+        <span class="ident">headers</span>.<span class="ident">insert</span>(<span class="string">&quot;cookie&quot;</span>, <span class="ident">HeaderValue::from_str</span>(<span class="kw-2">&amp;</span><span class="ident">cookies</span>).<span class="ident">expect</span>(<span class="string">&quot;Invalid cookies.&quot;</span>));
+        <span class="ident">headers</span>.<span class="ident">insert</span>(<span class="string">&quot;x-debug-options&quot;</span>, <span class="ident">HeaderValue::from_static</span>(<span class="string">&quot;bugReporterEnabled&quot;</span>));
+
+        <span class="comment">// This is bad. Fix later.</span>
+        <span class="ident">headers</span>.<span class="ident">insert</span>(<span class="string">&quot;x-discord-locale&quot;</span>, <span class="ident">HeaderValue::from_static</span>(<span class="string">&quot;en-US&quot;</span>));
+        
+        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::unwrap_used</span>)]</span>
+        <span class="ident">headers</span>.<span class="ident">insert</span>(<span class="string">&quot;x-super-properties&quot;</span>, <span class="ident">HeaderValue::from_str</span>(<span class="kw-2">&amp;</span><span class="ident">props</span>).<span class="ident">unwrap</span>());
+
+        <span class="self">Self</span> {
+            <span class="ident">headers</span>,
+        }
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_user_agent</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">user_agent</span>: <span class="kw-2">&amp;</span><span class="ident">String</span>) -&gt; <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">headers</span>.<span class="ident">insert</span>(<span class="ident">USER_AGENT</span>, <span class="ident">HeaderValue::from_str</span>(<span class="ident">user_agent</span>).<span class="ident">expect</span>(<span class="string">&quot;Invalid user agent.&quot;</span>));
+        <span class="self">self</span>.<span class="ident">headers</span>.<span class="ident">insert</span>(
+            <span class="string">&quot;x-super-properties&quot;</span>,
+            <span class="ident">HeaderValue::from_str</span>(<span class="kw-2">&amp;</span><span class="ident">build_super_properties</span>(<span class="ident">user_agent</span>)).<span class="ident">expect</span>(<span class="string">&quot;Invalid user agent for super properties.&quot;</span>),
+        );
+
+        <span class="self">self</span>
     }
 }
 
@@ -3863,6 +4070,7 @@
     <span class="kw">pub</span> <span class="ident">ratelimiter_disabled</span>: <span class="ident">bool</span>,
     <span class="kw">pub</span> <span class="ident">proxy</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Url</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">token</span>: <span class="ident">String</span>,
+    <span class="kw">pub</span> <span class="ident">user_ctx</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">UserRequestContext</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;unstable_discord_api&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">application_id</span>: <span class="ident">u64</span>,
 }
@@ -3874,6 +4082,7 @@
             .<span class="ident">field</span>(<span class="string">&quot;ratelimiter&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">ratelimiter</span>)
             .<span class="ident">field</span>(<span class="string">&quot;ratelimiter_disabled&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">ratelimiter_disabled</span>)
             .<span class="ident">field</span>(<span class="string">&quot;proxy&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">proxy</span>)
+            .<span class="ident">field</span>(<span class="string">&quot;user_ctx&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">user_ctx</span>)
             .<span class="ident">finish</span>()
     }
 }
@@ -3888,6 +4097,7 @@
             <span class="ident">ratelimiter_disabled</span>: <span class="bool-val">false</span>,
             <span class="ident">proxy</span>: <span class="prelude-val">None</span>,
             <span class="ident">token</span>: <span class="ident">token</span>.<span class="ident">to_string</span>(),
+            <span class="ident">user_ctx</span>: <span class="prelude-val">None</span>,
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;unstable_discord_api&quot;</span>)]</span>
             <span class="ident">application_id</span>: <span class="number">0</span>,
         }
@@ -3916,7 +4126,7 @@
         <span class="comment">//     format!(&quot;Bot {}&quot;, token)</span>
         <span class="comment">// };</span>
 
-        <span class="ident"><span class="self">Self</span>::new</span>(<span class="ident">Arc::new</span>(<span class="ident">built</span>), <span class="kw-2">&amp;</span><span class="ident">token</span>)
+        <span class="ident"><span class="self">Self</span>::new</span>(<span class="ident">Arc::new</span>(<span class="ident">built</span>), <span class="ident">token</span>)
     }
 
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;unstable_discord_api&quot;</span>)]</span>
@@ -3926,6 +4136,20 @@
         <span class="ident">base</span>.<span class="ident">application_id</span> <span class="op">=</span> <span class="ident">application_id</span>;
 
         <span class="ident">base</span>
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_user_ctx</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">super_properties</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">UserRequestContext</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">user_ctx</span> <span class="op">=</span> <span class="ident">super_properties</span>;
+
+        <span class="self">self</span>
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_user_agent</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">user_agent</span>: <span class="kw-2">&amp;</span><span class="ident">String</span>) -&gt; <span class="self">Self</span> {
+        <span class="kw">if</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">token</span>[..<span class="number">3</span>] <span class="op">!</span><span class="op">=</span> <span class="string">&quot;Bot&quot;</span> {
+            <span class="self">self</span>.<span class="ident">user_ctx</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">user_ctx</span>.<span class="ident">unwrap_or_default</span>().<span class="ident">set_user_agent</span>(<span class="ident">user_agent</span>));
+        }
+
+        <span class="self">self</span>
     }
 
     <span class="doccomment">/// Adds a [`User`] to a [`Group`].</span>
@@ -5287,7 +5511,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// - **channel_id**: ID of the channel the user is currently in</span>
     <span class="doccomment">///   (**required**)</span>
-    <span class="doccomment">/// - **supress**: Bool which toggles user&#39;s suppressed state. Setting this</span>
+    <span class="doccomment">/// - **suppress**: Bool which toggles user&#39;s suppressed state. Setting this</span>
     <span class="doccomment">///   to `false` will invite the user to speak.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example</span>
@@ -5334,7 +5558,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// - **channel_id**: ID of the channel the user is currently in</span>
     <span class="doccomment">///   (**required**)</span>
-    <span class="doccomment">/// - **supress**: Bool which toggles user&#39;s suppressed state. Setting this</span>
+    <span class="doccomment">/// - **suppress**: Bool which toggles user&#39;s suppressed state. Setting this</span>
     <span class="doccomment">///   to `false` will invite the user to speak.</span>
     <span class="doccomment">/// - **request_to_speak_timestamp**: ISO8601 timestamp to set the user&#39;s</span>
     <span class="doccomment">///   request to speak. This can be any present or future time.</span>
@@ -5656,7 +5880,7 @@
         .<span class="kw">await</span>
     }
 
-    <span class="doccomment">/// Deletes a webhook&#39;s messsage by Id.</span>
+    <span class="doccomment">/// Deletes a webhook&#39;s message by Id.</span>
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">delete_webhook_message</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">webhook_id</span>: <span class="ident">u64</span>,
@@ -7193,7 +7417,16 @@
     <span class="doccomment">/// # }</span>
     <span class="doccomment">/// ```</span>
     <span class="attribute">#[<span class="ident">instrument</span>]</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">request</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">req</span>: <span class="ident">Request</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ReqwestResponse</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">request</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">req</span>: <span class="ident">Request</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ReqwestResponse</span><span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">user_ctx</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">user_ctx</span> {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">org_headers</span> <span class="op">=</span> <span class="ident">req</span>.<span class="ident">headers</span>.<span class="ident">unwrap_or_default</span>();
+            <span class="ident">org_headers</span>.<span class="ident">extend</span>(<span class="ident">user_ctx</span>.<span class="ident">headers</span>.<span class="ident">clone</span>());
+            <span class="ident">req</span>.<span class="ident">headers</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">org_headers</span>);
+        }
+
+       
+
+
         <span class="kw">let</span> <span class="ident">response</span> <span class="op">=</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">ratelimiter_disabled</span> {
             <span class="kw">let</span> <span class="ident">request</span> <span class="op">=</span> <span class="ident">req</span>.<span class="ident">build</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">client</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">token</span>, <span class="self">self</span>.<span class="ident">proxy</span>.<span class="ident">as_ref</span>())<span class="question-mark">?</span>.<span class="ident">build</span>()<span class="question-mark">?</span>;
             <span class="self">self</span>.<span class="ident">client</span>.<span class="ident">execute</span>(<span class="ident">request</span>).<span class="kw">await</span><span class="question-mark">?</span>
@@ -7202,6 +7435,7 @@
             <span class="self">self</span>.<span class="ident">ratelimiter</span>.<span class="ident">perform</span>(<span class="ident">ratelimiting_req</span>).<span class="kw">await</span><span class="question-mark">?</span>
         };
 
+      
         <span class="kw">if</span> <span class="ident">response</span>.<span class="ident">status</span>().<span class="ident">is_success</span>() {
             <span class="prelude-val">Ok</span>(<span class="ident">response</span>)
         } <span class="kw">else</span> {
@@ -7256,11 +7490,13 @@
             <span class="ident">ratelimiter_disabled</span>: <span class="bool-val">false</span>,
             <span class="ident">proxy</span>: <span class="prelude-val">None</span>,
             <span class="ident">token</span>: <span class="string">&quot;&quot;</span>.<span class="ident">to_string</span>(),
+            <span class="ident">user_ctx</span>: <span class="prelude-val">None</span>,
+
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;unstable_discord_api&quot;</span>)]</span>
             <span class="ident">application_id</span>: <span class="number">0</span>,
         }
     }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="serenity" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.61.0-nightly (58f11791a 2022-03-17)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="serenity" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.61.0-nightly (1bfe40d11 2022-03-18)" ></div>
 </body></html>
