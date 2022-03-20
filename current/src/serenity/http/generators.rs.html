@@ -105,6 +105,82 @@
 <span id="100">100</span>
 <span id="101">101</span>
 <span id="102">102</span>
+<span id="103">103</span>
+<span id="104">104</span>
+<span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
+<span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
+<span id="116">116</span>
+<span id="117">117</span>
+<span id="118">118</span>
+<span id="119">119</span>
+<span id="120">120</span>
+<span id="121">121</span>
+<span id="122">122</span>
+<span id="123">123</span>
+<span id="124">124</span>
+<span id="125">125</span>
+<span id="126">126</span>
+<span id="127">127</span>
+<span id="128">128</span>
+<span id="129">129</span>
+<span id="130">130</span>
+<span id="131">131</span>
+<span id="132">132</span>
+<span id="133">133</span>
+<span id="134">134</span>
+<span id="135">135</span>
+<span id="136">136</span>
+<span id="137">137</span>
+<span id="138">138</span>
+<span id="139">139</span>
+<span id="140">140</span>
+<span id="141">141</span>
+<span id="142">142</span>
+<span id="143">143</span>
+<span id="144">144</span>
+<span id="145">145</span>
+<span id="146">146</span>
+<span id="147">147</span>
+<span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
+<span id="151">151</span>
+<span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
+<span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
+<span id="177">177</span>
+<span id="178">178</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">base64::encode</span>;
 <span class="kw">use</span> <span class="ident">hex::encode</span> <span class="kw">as</span> <span class="ident">h_encode</span>;
 <span class="kw">use</span> <span class="ident">rand::random</span>;
@@ -159,6 +235,82 @@
     }
 }
 
+<span class="comment">// impl&lt;&#39;a&gt; SuperProperties&lt;&#39;a&gt; {</span>
+<span class="comment">//     fn new(user_agent: &amp;&#39;a str) {</span>
+<span class="comment">//         enum OS {</span>
+<span class="comment">//             Windows,</span>
+<span class="comment">//             Linux,</span>
+<span class="comment">//             Apple,</span>
+<span class="comment">//         };</span>
+<span class="comment">//         impl OS {</span>
+<span class="comment">//             fn os(&amp;self)-&gt; &amp;&#39;static str {</span>
+<span class="comment">//                 match self {</span>
+<span class="comment">//                     OS::Windows =&gt; &quot;Windows&quot;,</span>
+<span class="comment">//                     OS::Linux =&gt; &quot;Linux&quot;,</span>
+<span class="comment">//                     OS::Apple =&gt; &quot;Apple&quot;,</span>
+<span class="comment">//                 }</span>
+<span class="comment">//             }</span>
+<span class="comment">//             fn os_version(&amp;self) -&gt; &amp;&#39;static str {</span>
+<span class="comment">//                 match self {</span>
+<span class="comment">//                     OS::Windows =&gt; &quot;10&quot;,</span>
+<span class="comment">//                     OS::Linux =&gt; &quot;&quot;,</span>
+<span class="comment">//                     OS::Apple =&gt; &quot;10_9_3&quot;,</span>
+<span class="comment">//                 }</span>
+<span class="comment">//             }</span>
+<span class="comment">//         }</span>
+<span class="comment">//         enum Browser {</span>
+<span class="comment">//             Chrome,</span>
+<span class="comment">//             Firefox,</span>
+<span class="comment">//             Safari,</span>
+<span class="comment">//         }</span>
+<span class="comment">//         impl Browser {</span>
+<span class="comment">//             fn browser(&amp;self) -&gt; &amp;&#39;static str {</span>
+<span class="comment">//                 match self {</span>
+<span class="comment">//                     Browser::Chrome =&gt; &quot;Chrome&quot;,</span>
+<span class="comment">//                     Browser::Firefox =&gt; &quot;Firefox&quot;,</span>
+<span class="comment">//                     Browser::Safari =&gt; &quot;Safari&quot;,</span>
+<span class="comment">//                 }</span>
+<span class="comment">//             }</span>
+<span class="comment">//         }</span>
+<span class="comment">//     let os = if user_agent.contains(&quot;Windows&quot;) {</span>
+<span class="comment">//         OS::Windows</span>
+<span class="comment">//     } else if user_agent.contains(&quot;Linux&quot;) {</span>
+<span class="comment">//         OS::Linux</span>
+<span class="comment">//     } else {</span>
+<span class="comment">//         OS::Apple</span>
+<span class="comment">//     };</span>
+<span class="comment">//     let browser = if user_agent.contains(&quot;Chrome&quot;) {</span>
+<span class="comment">//         Browser::Chrome</span>
+<span class="comment">//     } else if user_agent.contains(&quot;Firefox&quot;) {</span>
+<span class="comment">//         Browser::Firefox</span>
+<span class="comment">//     } else {</span>
+<span class="comment">//         Browser::Safari</span>
+<span class="comment">//     };</span>
+<span class="comment">//     let browser_version = browser_user_agent.split(&#39;/&#39;).collect::&lt;Vec&lt;&amp;str&gt;&gt;()[3]</span>
+<span class="comment">//         .split(&#39; &#39;)</span>
+<span class="comment">//         .collect::&lt;Vec&lt;&amp;str&gt;&gt;()[0];</span>
+
+<span class="comment">//     let super_properties = SuperProperties {</span>
+<span class="comment">//         os: os.os(),</span>
+<span class="comment">//         os_version: os.os_version(),</span>
+<span class="comment">//         browser: browser.browser(),</span>
+<span class="comment">//         browser_user_agent,</span>
+<span class="comment">//         browser_version,</span>
+<span class="comment">//         ..SuperProperties::default()</span>
+<span class="comment">//     };</span>
+
+<span class="comment">//     // let strsuper = serde_json::to_string(&amp;super_properties).expect(&quot;Invalid super properties generated.&quot;);</span>
+<span class="comment">//     // encode(strsuper);</span>
+<span class="comment">//         if user_agent.contains(&quot;Windows&quot;) {</span>
+
+<span class="comment">//         }</span>
+
+<span class="comment">//         Self {</span>
+
+<span class="comment">//         }</span>
+<span class="comment">//     }</span>
+<span class="comment">// }</span>
+
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">build_super_properties</span>(<span class="ident">browser_user_agent</span>: <span class="kw">impl</span> <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span>) -&gt; <span class="ident">String</span> {
     <span class="kw">let</span> <span class="ident">browser_user_agent</span> <span class="op">=</span> <span class="ident">browser_user_agent</span>.<span class="ident">as_ref</span>();
     <span class="kw">let</span> (<span class="ident">os</span>, <span class="ident">os_version</span>) <span class="op">=</span> <span class="kw">if</span> <span class="ident">browser_user_agent</span>.<span class="ident">contains</span>(<span class="string">&quot;Windows&quot;</span>) {
@@ -208,5 +360,5 @@
     <span class="macro">format!</span>(<span class="string">&quot;{}{}&quot;</span>, <span class="ident">base</span>, <span class="ident">h_encode</span>(<span class="ident">data</span>))
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="serenity" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.61.0-nightly (1bfe40d11 2022-03-18)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="serenity" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.61.0-nightly (8d60bf427 2022-03-19)" ></div>
 </body></html>

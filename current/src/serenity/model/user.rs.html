@@ -1321,7 +1321,6 @@
 <span id="1316">1316</span>
 <span id="1317">1317</span>
 <span id="1318">1318</span>
-<span id="1319">1319</span>
 </pre><pre class="rust"><code><span class="doccomment">//! User information-related models.</span>
 
 <span class="kw">use</span> <span class="ident">std::fmt</span>;
@@ -2430,13 +2429,12 @@
                 }
             }
         }
-
+        
         <span class="kw">let</span> <span class="ident">map</span> <span class="op">=</span> <span class="macro">json!</span>({
-            <span class="string">&quot;recipient_ids&quot;</span>: [
+            <span class="string">&quot;recipients&quot;</span>: [
                 <span class="self">self</span>.<span class="number">0</span>.<span class="ident">to_string</span>(),
             ]
         });
-
         <span class="ident">cache_http</span>.<span class="ident">http</span>().<span class="ident">create_private_channel</span>(<span class="kw-2">&amp;</span><span class="ident">map</span>).<span class="kw">await</span>
     }
 
@@ -2642,5 +2640,5 @@
     }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="serenity" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.61.0-nightly (1bfe40d11 2022-03-18)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="serenity" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.61.0-nightly (8d60bf427 2022-03-19)" ></div>
 </body></html>
