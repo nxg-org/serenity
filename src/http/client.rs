@@ -33,6 +33,7 @@ use super::{
     HttpError,
 };
 use crate::constants;
+use crate::http::generators::*;
 use crate::http::routing::Route;
 use crate::internal::prelude::*;
 #[cfg(feature = "unstable_discord_api")]
@@ -68,6 +69,7 @@ pub struct HttpBuilder<'a> {
     ratelimiter: Option<Ratelimiter>,
     ratelimiter_disabled: Option<bool>,
     token: Option<String>,
+    user_ctx: Option<UserRequestContext>,
     proxy: Option<Url>,
     fut: Option<BoxFuture<'a, Result<Http>>>,
     #[cfg(feature = "unstable_discord_api")]
@@ -82,6 +84,7 @@ impl<'a> HttpBuilder<'a> {
             ratelimiter: None,
             ratelimiter_disabled: Some(false),
             token: None,
+            user_ctx: None,
             proxy: None,
             fut: None,
             #[cfg(feature = "unstable_discord_api")]
@@ -106,8 +109,8 @@ impl<'a> HttpBuilder<'a> {
         self
     }
 
-    /// Sets a token for the bot. If the token is not prefixed "Bot ", this
-    /// method will automatically do so.
+    /// Sets a token for the bot.
+    /// Prefix the token with "Bot " to use a bot token.
     #[must_use]
     pub fn token(mut self, token: impl AsRef<str>) -> Self {
         let token = token.as_ref().trim();
@@ -172,6 +175,12 @@ impl<'a> HttpBuilder<'a> {
 
         Ok(self)
     }
+
+    pub fn user_agent(mut self, user_agent: &String) -> Self {
+        self.user_ctx = Some(self.user_ctx.unwrap_or_default().set_user_agent(user_agent));
+
+        self
+    }
 }
 
 impl<'a> Future for HttpBuilder<'a> {
@@ -200,6 +209,7 @@ impl<'a> Future for HttpBuilder<'a> {
 
             let ratelimiter_disabled = self.ratelimiter_disabled.take().unwrap();
             let proxy = self.proxy.take();
+            let user_ctx = self.user_ctx.take();
 
             self.fut = Some(Box::pin(async move {
                 Ok(Http {
@@ -208,6 +218,7 @@ impl<'a> Future for HttpBuilder<'a> {
                     ratelimiter_disabled,
                     proxy,
                     token,
+                    user_ctx,
                     #[cfg(feature = "unstable_discord_api")]
                     application_id,
                 })
@@ -215,6 +226,84 @@ impl<'a> Future for HttpBuilder<'a> {
         }
 
         self.fut.as_mut().unwrap().as_mut().poll(ctx)
+    }
+}
+
+#[repr(transparent)]
+#[derive(Debug)]
+pub struct UserRequestContext {
+    headers: reqwest::header::HeaderMap,
+}
+
+impl From<Headers> for UserRequestContext {
+    fn from(headers: Headers) -> Self {
+        Self {
+            headers,
+        }
+    }
+}
+
+// impl Into<Headers> for UserRequestContext {
+//     fn into(self) -> Headers {
+//         self.headers
+//     }
+// }
+
+impl Default for UserRequestContext {
+    fn default() -> Self {
+        let mut headers = reqwest::header::HeaderMap::new();
+        let cookies = build_cookies();
+
+        // headers.insert(ACCEPT, HeaderValue::from_static("*/*"));
+        // headers.insert(CONNECTION, HeaderValue::from_static("keep-alive"));
+        // headers.insert(HOST, HeaderValue::from_static("discord.com"));
+
+        headers.insert("cookie", HeaderValue::from_str(&cookies).expect("Invalid cookies."));
+        headers.insert("x-debug-options", HeaderValue::from_static("bugReporterEnabled"));
+
+        // This is bad. Fix later.
+        headers.insert("x-discord-locale", HeaderValue::from_static("en-US"));
+        
+
+        Self { headers }
+    }
+}
+
+impl UserRequestContext {
+    pub fn new(user_agent: &String) -> Self {
+        let mut headers = reqwest::header::HeaderMap::new();
+        let props = build_super_properties(user_agent);
+        let cookies = build_cookies();
+
+        // headers.insert(ACCEPT, HeaderValue::from_static("*/*"));
+        // headers.insert(CONNECTION, HeaderValue::from_static("keep-alive"));
+        // headers.insert(HOST, HeaderValue::from_static("discord.com"));
+
+        
+        headers.insert(USER_AGENT, HeaderValue::from_str(user_agent).expect("Invalid user agent."));
+
+        headers.insert("cookie", HeaderValue::from_str(&cookies).expect("Invalid cookies."));
+        headers.insert("x-debug-options", HeaderValue::from_static("bugReporterEnabled"));
+
+        // This is bad. Fix later.
+        headers.insert("x-discord-locale", HeaderValue::from_static("en-US"));
+        
+        #[allow(clippy::unwrap_used)]
+        headers.insert("x-super-properties", HeaderValue::from_str(&props).unwrap());
+
+        Self {
+            headers,
+        }
+    }
+
+    pub fn set_user_agent(mut self, user_agent: &String) -> Self {
+        self.headers.insert(USER_AGENT, HeaderValue::from_str(user_agent).expect("Invalid user agent."));
+        self.headers.insert(
+            "x-super-properties",
+            HeaderValue::from_str(&build_super_properties(user_agent)).expect("Invalid user agent for super properties."),
+        );
+
+        self
     }
 }
 
@@ -229,6 +318,7 @@ pub struct Http {
     pub ratelimiter_disabled: bool,
     pub proxy: Option<Url>,
     pub token: String,
+    pub user_ctx: Option<UserRequestContext>,
     #[cfg(feature = "unstable_discord_api")]
     pub application_id: u64,
 }
@@ -240,6 +330,7 @@ impl fmt::Debug for Http {
             .field("ratelimiter", &self.ratelimiter)
             .field("ratelimiter_disabled", &self.ratelimiter_disabled)
             .field("proxy", &self.proxy)
+            .field("user_ctx", &self.user_ctx)
             .finish()
     }
 }
@@ -254,6 +345,7 @@ impl Http {
             ratelimiter_disabled: false,
             proxy: None,
             token: token.to_string(),
+            user_ctx: None,
             #[cfg(feature = "unstable_discord_api")]
             application_id: 0,
         }
@@ -282,7 +374,7 @@ impl Http {
         //     format!("Bot {}", token)
         // };
 
-        Self::new(Arc::new(built), &token)
+        Self::new(Arc::new(built), token)
     }
 
     #[cfg(feature = "unstable_discord_api")]
@@ -292,6 +384,20 @@ impl Http {
         base.application_id = application_id;
 
         base
+    }
+
+    pub fn set_user_ctx(mut self, super_properties: Option<UserRequestContext>) -> Self {
+        self.user_ctx = super_properties;
+
+        self
+    }
+
+    pub fn set_user_agent(mut self, user_agent: &String) -> Self {
+        if &self.token[..3] != "Bot" {
+            self.user_ctx = Some(self.user_ctx.unwrap_or_default().set_user_agent(user_agent));
+        }
+
+        self
     }
 
     /// Adds a [`User`] to a [`Group`].
@@ -1653,7 +1759,7 @@ impl Http {
     ///
     /// - **channel_id**: ID of the channel the user is currently in
     ///   (**required**)
-    /// - **supress**: Bool which toggles user's suppressed state. Setting this
+    /// - **suppress**: Bool which toggles user's suppressed state. Setting this
     ///   to `false` will invite the user to speak.
     ///
     /// # Example
@@ -1700,7 +1806,7 @@ impl Http {
     ///
     /// - **channel_id**: ID of the channel the user is currently in
     ///   (**required**)
-    /// - **supress**: Bool which toggles user's suppressed state. Setting this
+    /// - **suppress**: Bool which toggles user's suppressed state. Setting this
     ///   to `false` will invite the user to speak.
     /// - **request_to_speak_timestamp**: ISO8601 timestamp to set the user's
     ///   request to speak. This can be any present or future time.
@@ -2022,7 +2128,7 @@ impl Http {
         .await
     }
 
-    /// Deletes a webhook's messsage by Id.
+    /// Deletes a webhook's message by Id.
     pub async fn delete_webhook_message(
         &self,
         webhook_id: u64,
@@ -3559,7 +3665,16 @@ impl Http {
     /// # }
     /// ```
     #[instrument]
-    pub async fn request(&self, req: Request<'_>) -> Result<ReqwestResponse> {
+    pub async fn request(&self, mut req: Request<'_>) -> Result<ReqwestResponse> {
+        if let Some(user_ctx) = &self.user_ctx {
+            let mut org_headers = req.headers.unwrap_or_default();
+            org_headers.extend(user_ctx.headers.clone());
+            req.headers = Some(org_headers);
+        }
+
+       
+
+
         let response = if self.ratelimiter_disabled {
             let request = req.build(&self.client, &self.token, self.proxy.as_ref())?.build()?;
             self.client.execute(request).await?
@@ -3568,6 +3683,7 @@ impl Http {
             self.ratelimiter.perform(ratelimiting_req).await?
         };
 
+      
         if response.status().is_success() {
             Ok(response)
         } else {
@@ -3622,6 +3738,8 @@ impl Default for Http {
             ratelimiter_disabled: false,
             proxy: None,
             token: "".to_string(),
+            user_ctx: None,
+
             #[cfg(feature = "unstable_discord_api")]
             application_id: 0,
         }

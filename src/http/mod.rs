@@ -25,6 +25,7 @@
 
 pub mod client;
 pub mod error;
+pub mod generators;
 pub mod ratelimiting;
 pub mod request;
 pub mod routing;
