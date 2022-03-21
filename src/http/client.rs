@@ -3585,7 +3585,7 @@ impl Http {
         .await
     }
 
-    pub async fn submit_verification_form(&self, guild_id: u64, map: &Value) -> Result<()> {
+    pub async fn submit_guild_verification_form(&self, guild_id: u64, map: &Value) -> Result<()> {
         let body = serde_json::to_vec(map)?;
 
         self.fire(Request {
