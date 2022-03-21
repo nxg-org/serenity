@@ -2759,6 +2759,23 @@
 <span id="2754">2754</span>
 <span id="2755">2755</span>
 <span id="2756">2756</span>
+<span id="2757">2757</span>
+<span id="2758">2758</span>
+<span id="2759">2759</span>
+<span id="2760">2760</span>
+<span id="2761">2761</span>
+<span id="2762">2762</span>
+<span id="2763">2763</span>
+<span id="2764">2764</span>
+<span id="2765">2765</span>
+<span id="2766">2766</span>
+<span id="2767">2767</span>
+<span id="2768">2768</span>
+<span id="2769">2769</span>
+<span id="2770">2770</span>
+<span id="2771">2771</span>
+<span id="2772">2772</span>
+<span id="2773">2773</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">borrow::Cow</span>,
     <span class="ident">fmt</span>::{<span class="ident">Display</span>, <span class="ident">Write</span>},
@@ -3051,6 +3068,12 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`GuildId`]: crate::model::id::GuildId</span>
     <span class="ident">GuildsIdMembersSearch</span>(<span class="ident">u64</span>),
+    <span class="doccomment">/// Route for the &#39;/guilds/:guild_id/member-verification` path.</span>
+    <span class="doccomment">/// </span>
+    <span class="doccomment">/// The data is the relevant [`GuildId`].</span>
+    <span class="doccomment">/// </span>
+    <span class="doccomment">/// [`GuildId`]: crate::model::id::GuildId</span>
+    <span class="ident">GuildsIdMemberVerificationForm</span>(<span class="ident">u64</span>),
     <span class="doccomment">/// Route for the `/guilds/:guild_id/prune` path.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// The data is the relevant [`GuildId`].</span>
@@ -3075,6 +3098,12 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`GuildId`]: crate::model::id::GuildId</span>
     <span class="ident">GuildsIdRolesId</span>(<span class="ident">u64</span>),
+    <span class="doccomment">/// Route for the `/guilds/:guild_id/requests/@me` path.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The data is the relevant [`GuildId`].</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`GuildId`]: crate::model::id::GuildId</span>
+    <span class="ident">GuildsIdRequestsMe</span>(<span class="ident">u64</span>),
     <span class="doccomment">/// Route for the `/guilds/:guild_id/vanity-url` path.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// The data is the relevant [`GuildId`].</span>
@@ -3099,12 +3128,6 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`GuildId`]: crate::model::id::GuildId</span>
     <span class="ident">GuildsIdWebhooks</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Route for the &#39;/guilds/:guild_id/member-verification` path.</span>
-    <span class="doccomment">/// </span>
-    <span class="doccomment">/// The data is the relevant [`GuildId`].</span>
-    <span class="doccomment">/// </span>
-    <span class="doccomment">/// [`GuildId`]: crate::model::id::GuildId</span>
-    <span class="ident">GuildsVerificationForm</span>(<span class="ident">u64</span>),
     <span class="doccomment">/// Route for the `/guilds/:guild_id/welcome-screen` path.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// The data is the relevant [`GuildId`].</span>
@@ -3552,6 +3575,14 @@
         <span class="macro">format!</span>(<span class="macro">api!</span>(<span class="string">&quot;/guilds/{}/members/@me&quot;</span>), <span class="ident">guild_id</span>)
     }
 
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">guild_member_verification</span>(<span class="ident">guild_id</span>: <span class="ident">u64</span>) -&gt; <span class="ident">String</span> {
+        <span class="macro">format!</span>(<span class="macro">api!</span>(<span class="string">&quot;/guilds/{}/member-verification&quot;</span>), <span class="ident">guild_id</span>)
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">guild_member_verification_optioned</span>(<span class="ident">guild_id</span>: <span class="ident">u64</span>, <span class="ident">with_guild</span>: <span class="ident">bool</span>, <span class="ident">invite_code</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">String</span> {
+        <span class="macro">format!</span>(<span class="macro">api!</span>(<span class="string">&quot;/guilds/{}/member-verification?with_guild={}&amp;invite_code={}&quot;</span>), <span class="ident">guild_id</span>, <span class="ident">with_guild</span>, <span class="ident">invite_code</span>)
+    }
+
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">guild_nickname</span>(<span class="ident">guild_id</span>: <span class="ident">u64</span>) -&gt; <span class="ident">String</span> {
         <span class="macro">format!</span>(<span class="macro">api!</span>(<span class="string">&quot;/guilds/{}/members/@me/nick&quot;</span>), <span class="ident">guild_id</span>)
     }
@@ -3562,6 +3593,10 @@
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">guild_regions</span>(<span class="ident">guild_id</span>: <span class="ident">u64</span>) -&gt; <span class="ident">String</span> {
         <span class="macro">format!</span>(<span class="macro">api!</span>(<span class="string">&quot;/guilds/{}/regions&quot;</span>), <span class="ident">guild_id</span>)
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">guild_requests_me</span>(<span class="ident">guild_id</span>: <span class="ident">u64</span>) -&gt; <span class="ident">String</span> {
+        <span class="macro">format!</span>(<span class="macro">api!</span>(<span class="string">&quot;/guilds/{}/requests/@me&quot;</span>), <span class="ident">guild_id</span>)
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">guild_role</span>(<span class="ident">guild_id</span>: <span class="ident">u64</span>, <span class="ident">role_id</span>: <span class="ident">u64</span>) -&gt; <span class="ident">String</span> {
@@ -3575,15 +3610,6 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">guild_vanity_url</span>(<span class="ident">guild_id</span>: <span class="ident">u64</span>) -&gt; <span class="ident">String</span> {
         <span class="macro">format!</span>(<span class="macro">api!</span>(<span class="string">&quot;/guilds/{}/vanity-url&quot;</span>), <span class="ident">guild_id</span>)
     }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">guild_verification_form</span>(<span class="ident">guild_id</span>: <span class="ident">u64</span>) -&gt; <span class="ident">String</span> {
-        <span class="macro">format!</span>(<span class="macro">api!</span>(<span class="string">&quot;/guilds/{}/member-verification&quot;</span>), <span class="ident">guild_id</span>)
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">guild_verification_form_optioned</span>(<span class="ident">guild_id</span>: <span class="ident">u64</span>, <span class="ident">with_guild</span>: <span class="ident">bool</span>, <span class="ident">invite_code</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">String</span> {
-        <span class="macro">format!</span>(<span class="macro">api!</span>(<span class="string">&quot;/guilds/{}/member-verification?with_guild={}&amp;invite_code={}&quot;</span>), <span class="ident">guild_id</span>, <span class="ident">with_guild</span>, <span class="ident">invite_code</span>)
-    }
-
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">guild_voice_states</span>(<span class="ident">guild_id</span>: <span class="ident">u64</span>, <span class="ident">user_id</span>: <span class="ident">u64</span>) -&gt; <span class="ident">String</span> {
         <span class="macro">format!</span>(<span class="macro">api!</span>(<span class="string">&quot;/guilds/{}/voice-states/{}&quot;</span>), <span class="ident">guild_id</span>, <span class="ident">user_id</span>)
@@ -4351,6 +4377,9 @@
     <span class="ident">StatusIncidentsUnresolved</span>,
     <span class="ident">StatusMaintenancesActive</span>,
     <span class="ident">StatusMaintenancesUpcoming</span>,
+    <span class="ident">SubmitVerificationForm</span> {
+        <span class="ident">guild_id</span>: <span class="ident">u64</span>,
+    },
     <span class="ident">UnpinMessage</span> {
         <span class="ident">channel_id</span>: <span class="ident">u64</span>,
         <span class="ident">message_id</span>: <span class="ident">u64</span>,
@@ -5230,7 +5259,7 @@
             } =&gt; (
                 <span class="ident">LightMethod::Get</span>,
                 <span class="ident">Route::GuildsIdWelcomeScreen</span>(<span class="ident">guild_id</span>),
-                <span class="ident">Cow::from</span>(<span class="ident">Route::guild_verification_form_optioned</span>(<span class="ident">guild_id</span>, <span class="ident">with_guild</span>, <span class="ident">code</span>)),
+                <span class="ident">Cow::from</span>(<span class="ident">Route::guild_member_verification_optioned</span>(<span class="ident">guild_id</span>, <span class="ident">with_guild</span>, <span class="ident">code</span>)),
             ),
             <span class="ident">RouteInfo::GetGuildWelcomeScreen</span> {
                 <span class="ident">guild_id</span>,
@@ -5504,6 +5533,11 @@
             <span class="ident">RouteInfo::StatusMaintenancesUpcoming</span> =&gt; {
                 (<span class="ident">LightMethod::Get</span>, <span class="ident">Route::None</span>, <span class="ident">Cow::from</span>(<span class="ident">Route::status_maintenances_upcoming</span>()))
             },
+            <span class="ident">RouteInfo::SubmitVerificationForm</span> {
+                <span class="ident">guild_id</span>
+            } =&gt; (
+                <span class="ident">LightMethod::Put</span>, <span class="ident">Route::GuildsIdRequestsMe</span>(<span class="ident">guild_id</span>), <span class="ident">Cow::from</span>(<span class="ident">Route::guild_requests_me</span>(<span class="ident">guild_id</span>))
+            ),
             <span class="ident">RouteInfo::UnpinMessage</span> {
                 <span class="ident">channel_id</span>,
                 <span class="ident">message_id</span>,

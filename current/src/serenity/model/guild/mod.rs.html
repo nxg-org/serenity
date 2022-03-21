@@ -3370,6 +3370,34 @@
 <span id="3365">3365</span>
 <span id="3366">3366</span>
 <span id="3367">3367</span>
+<span id="3368">3368</span>
+<span id="3369">3369</span>
+<span id="3370">3370</span>
+<span id="3371">3371</span>
+<span id="3372">3372</span>
+<span id="3373">3373</span>
+<span id="3374">3374</span>
+<span id="3375">3375</span>
+<span id="3376">3376</span>
+<span id="3377">3377</span>
+<span id="3378">3378</span>
+<span id="3379">3379</span>
+<span id="3380">3380</span>
+<span id="3381">3381</span>
+<span id="3382">3382</span>
+<span id="3383">3383</span>
+<span id="3384">3384</span>
+<span id="3385">3385</span>
+<span id="3386">3386</span>
+<span id="3387">3387</span>
+<span id="3388">3388</span>
+<span id="3389">3389</span>
+<span id="3390">3390</span>
+<span id="3391">3391</span>
+<span id="3392">3392</span>
+<span id="3393">3393</span>
+<span id="3394">3394</span>
+<span id="3395">3395</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Models relating to guilds and types that it owns.</span>
 
 <span class="comment">// FIXME: Remove after the removal of the `̀nsfw` field and the `GuildEmbed` structure.</span>
@@ -6196,13 +6224,41 @@
 
 <span class="doccomment">/// Information relating to a guild&#39;s verification form.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">GuildVerificatiomForm</span> {
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">GuildVerificationForm</span> {
      <span class="doccomment">/// The server description shown in the verification form.</span>
      <span class="kw">pub</span> <span class="ident">description</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
      <span class="doccomment">/// The fields shown in the verification form.</span>
      <span class="kw">pub</span> <span class="ident">form_fields</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">GuildFormField</span><span class="op">&gt;</span>,
      <span class="doccomment">/// The version of the shown form.</span>
      <span class="kw">pub</span> <span class="ident">version</span>: <span class="ident">DateTime</span><span class="op">&lt;</span><span class="ident">Utc</span><span class="op">&gt;</span>
+}
+
+<span class="comment">// impl Into&lt;GuildVerificationFormSubmission&gt; for GuildVerificationForm {</span>
+<span class="comment">//     fn into(self) -&gt; GuildVerificationFormSubmission {</span>
+<span class="comment">//         GuildVerificationFormSubmission {</span>
+<span class="comment">//             form_fields: self.form_fields,</span>
+<span class="comment">//             version: self.version</span>
+<span class="comment">//         }</span>
+<span class="comment">//     }</span>
+<span class="comment">// }</span>
+
+<span class="doccomment">/// Information relating to the form submitted to verify in a server.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">GuildVerificationFormSubmission</span> {
+         <span class="doccomment">/// The fields shown in the verification form.</span>
+         <span class="kw">pub</span> <span class="ident">form_fields</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">GuildFormField</span><span class="op">&gt;</span>,
+         <span class="doccomment">/// The version of the shown form.</span>
+         <span class="kw">pub</span> <span class="ident">version</span>: <span class="ident">DateTime</span><span class="op">&lt;</span><span class="ident">Utc</span><span class="op">&gt;</span>
+
+}
+
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">GuildVerificationForm</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">GuildVerificationFormSubmission</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">a</span>: <span class="ident">GuildVerificationForm</span>) -&gt; <span class="self">Self</span> {
+        <span class="self">Self</span> {
+            <span class="ident">form_fields</span>: <span class="ident">a</span>.<span class="ident">form_fields</span>,
+            <span class="ident">version</span>: <span class="ident">a</span>.<span class="ident">version</span>
+        }
+    }
 }
 
 <span class="doccomment">/// Information relating to a guild&#39;s welcome screen.</span>
