@@ -185,6 +185,8 @@
 <span id="180">180</span>
 <span id="181">181</span>
 <span id="182">182</span>
+<span id="183">183</span>
+<span id="184">184</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::borrow::Cow</span>;
 
 <span class="kw">use</span> <span class="ident">reqwest</span>::{
@@ -291,12 +293,14 @@
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">headers</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">request_headers</span>) <span class="op">=</span> <span class="ident">request_headers</span> {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">h</span> <span class="op">=</span> <span class="ident">request_headers</span>.<span class="ident">clone</span>();
-            <span class="ident">h</span>.<span class="ident">reserve</span>(<span class="number">4</span>);
+            <span class="ident">h</span>.<span class="ident">reserve</span>(<span class="number">3</span>);
             <span class="ident">h</span>
         } <span class="kw">else</span> {
-            <span class="ident">Headers::with_capacity</span>(<span class="number">4</span>)
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">h</span> <span class="op">=</span> <span class="ident">Headers::with_capacity</span>(<span class="number">4</span>);
+            <span class="ident">h</span>.<span class="ident">insert</span>(<span class="ident">USER_AGENT</span>, <span class="ident">HeaderValue::from_static</span>(<span class="ident">constants::USER_AGENT</span>));
+            <span class="ident">h</span>
         };
-        <span class="ident">headers</span>.<span class="ident">insert</span>(<span class="ident">USER_AGENT</span>, <span class="ident">HeaderValue::from_static</span>(<span class="ident">constants::USER_AGENT</span>));
+       
         <span class="ident">headers</span>
             .<span class="ident">insert</span>(<span class="ident">AUTHORIZATION</span>, <span class="ident">HeaderValue::from_str</span>(<span class="ident">token</span>).<span class="ident">map_err</span>(<span class="ident">HttpError::InvalidHeader</span>)<span class="question-mark">?</span>);
 
@@ -368,5 +372,5 @@
     }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="serenity" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.61.0-nightly (8d60bf427 2022-03-19)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="serenity" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.61.0-nightly (c84f39e6c 2022-03-20)" ></div>
 </body></html>

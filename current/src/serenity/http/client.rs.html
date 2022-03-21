@@ -3749,6 +3749,63 @@
 <span id="3744">3744</span>
 <span id="3745">3745</span>
 <span id="3746">3746</span>
+<span id="3747">3747</span>
+<span id="3748">3748</span>
+<span id="3749">3749</span>
+<span id="3750">3750</span>
+<span id="3751">3751</span>
+<span id="3752">3752</span>
+<span id="3753">3753</span>
+<span id="3754">3754</span>
+<span id="3755">3755</span>
+<span id="3756">3756</span>
+<span id="3757">3757</span>
+<span id="3758">3758</span>
+<span id="3759">3759</span>
+<span id="3760">3760</span>
+<span id="3761">3761</span>
+<span id="3762">3762</span>
+<span id="3763">3763</span>
+<span id="3764">3764</span>
+<span id="3765">3765</span>
+<span id="3766">3766</span>
+<span id="3767">3767</span>
+<span id="3768">3768</span>
+<span id="3769">3769</span>
+<span id="3770">3770</span>
+<span id="3771">3771</span>
+<span id="3772">3772</span>
+<span id="3773">3773</span>
+<span id="3774">3774</span>
+<span id="3775">3775</span>
+<span id="3776">3776</span>
+<span id="3777">3777</span>
+<span id="3778">3778</span>
+<span id="3779">3779</span>
+<span id="3780">3780</span>
+<span id="3781">3781</span>
+<span id="3782">3782</span>
+<span id="3783">3783</span>
+<span id="3784">3784</span>
+<span id="3785">3785</span>
+<span id="3786">3786</span>
+<span id="3787">3787</span>
+<span id="3788">3788</span>
+<span id="3789">3789</span>
+<span id="3790">3790</span>
+<span id="3791">3791</span>
+<span id="3792">3792</span>
+<span id="3793">3793</span>
+<span id="3794">3794</span>
+<span id="3795">3795</span>
+<span id="3796">3796</span>
+<span id="3797">3797</span>
+<span id="3798">3798</span>
+<span id="3799">3799</span>
+<span id="3800">3800</span>
+<span id="3801">3801</span>
+<span id="3802">3802</span>
+<span id="3803">3803</span>
 </pre><pre class="rust"><code><span class="attribute">#![<span class="ident">allow</span>(<span class="ident">clippy::missing_errors_doc</span>)]</span>
 <span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">collections::BTreeMap</span>,
@@ -3762,6 +3819,7 @@
 
 <span class="kw">use</span> <span class="ident">bytes::buf::Buf</span>;
 <span class="kw">use</span> <span class="ident">futures::future::BoxFuture</span>;
+<span class="kw">use</span> <span class="ident">once_cell::sync::OnceCell</span>;
 <span class="kw">use</span> <span class="ident">percent_encoding</span>::{<span class="ident">utf8_percent_encode</span>, <span class="ident">NON_ALPHANUMERIC</span>};
 <span class="kw">use</span> <span class="ident">reqwest</span>::{
     <span class="ident">header</span>::{<span class="ident">HeaderMap</span> <span class="kw">as</span> <span class="ident">Headers</span>, <span class="ident">HeaderValue</span>, <span class="ident">AUTHORIZATION</span>, <span class="ident">CONTENT_TYPE</span>, <span class="ident">USER_AGENT</span>},
@@ -3773,7 +3831,6 @@
 <span class="kw">use</span> <span class="ident">serde_json::json</span>;
 <span class="kw">use</span> <span class="ident">tokio</span>::{<span class="ident">fs::File</span>, <span class="ident">io::AsyncReadExt</span>};
 <span class="kw">use</span> <span class="ident">tracing</span>::{<span class="ident">debug</span>, <span class="ident">instrument</span>, <span class="ident">trace</span>};
-<span class="kw">use</span> <span class="ident">once_cell::sync::OnceCell</span>;
 
 <span class="kw">use</span> <span class="kw">super</span>::{
     <span class="ident">ratelimiting</span>::{<span class="ident">RatelimitedRequest</span>, <span class="ident">Ratelimiter</span>},
@@ -4015,9 +4072,10 @@
 
         <span class="comment">// This is bad. Fix later.</span>
         <span class="ident">headers</span>.<span class="ident">insert</span>(<span class="string">&quot;x-discord-locale&quot;</span>, <span class="ident">HeaderValue::from_static</span>(<span class="string">&quot;en-US&quot;</span>));
-        
 
-        <span class="self">Self</span> { <span class="ident">headers</span> }
+        <span class="self">Self</span> {
+            <span class="ident">headers</span>,
+        }
     }
 }
 
@@ -4030,7 +4088,7 @@
         <span class="comment">// headers.insert(ACCEPT, HeaderValue::from_static(&quot;*/*&quot;));</span>
         <span class="comment">// headers.insert(CONNECTION, HeaderValue::from_static(&quot;keep-alive&quot;));</span>
         <span class="comment">// headers.insert(HOST, HeaderValue::from_static(&quot;discord.com&quot;));</span>
-        
+
         <span class="ident">headers</span>.<span class="ident">insert</span>(<span class="ident">USER_AGENT</span>, <span class="ident">HeaderValue::from_str</span>(<span class="ident">user_agent</span>).<span class="ident">expect</span>(<span class="string">&quot;Invalid user agent.&quot;</span>));
 
         <span class="ident">headers</span>.<span class="ident">insert</span>(<span class="string">&quot;cookie&quot;</span>, <span class="ident">HeaderValue::from_str</span>(<span class="kw-2">&amp;</span><span class="ident">cookies</span>).<span class="ident">expect</span>(<span class="string">&quot;Invalid cookies.&quot;</span>));
@@ -4038,7 +4096,7 @@
 
         <span class="comment">// This is bad. Fix later.</span>
         <span class="ident">headers</span>.<span class="ident">insert</span>(<span class="string">&quot;x-discord-locale&quot;</span>, <span class="ident">HeaderValue::from_static</span>(<span class="string">&quot;en-US&quot;</span>));
-        
+
         <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::unwrap_used</span>)]</span>
         <span class="ident">headers</span>.<span class="ident">insert</span>(<span class="string">&quot;x-super-properties&quot;</span>, <span class="ident">HeaderValue::from_str</span>(<span class="kw-2">&amp;</span><span class="ident">props</span>).<span class="ident">unwrap</span>());
 
@@ -4048,10 +4106,12 @@
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_user_agent</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">user_agent</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">headers</span>.<span class="ident">insert</span>(<span class="ident">USER_AGENT</span>, <span class="ident">HeaderValue::from_str</span>(<span class="ident">user_agent</span>).<span class="ident">expect</span>(<span class="string">&quot;Invalid user agent.&quot;</span>));
+        <span class="self">self</span>.<span class="ident">headers</span>
+            .<span class="ident">insert</span>(<span class="ident">USER_AGENT</span>, <span class="ident">HeaderValue::from_str</span>(<span class="ident">user_agent</span>).<span class="ident">expect</span>(<span class="string">&quot;Invalid user agent.&quot;</span>));
         <span class="self">self</span>.<span class="ident">headers</span>.<span class="ident">insert</span>(
             <span class="string">&quot;x-super-properties&quot;</span>,
-            <span class="ident">HeaderValue::from_str</span>(<span class="kw-2">&amp;</span><span class="ident">build_super_properties</span>(<span class="ident">user_agent</span>)).<span class="ident">expect</span>(<span class="string">&quot;Invalid user agent for super properties.&quot;</span>),
+            <span class="ident">HeaderValue::from_str</span>(<span class="kw-2">&amp;</span><span class="ident">build_super_properties</span>(<span class="ident">user_agent</span>))
+                .<span class="ident">expect</span>(<span class="string">&quot;Invalid user agent for super properties.&quot;</span>),
         );
         <span class="self">self</span>
     }
@@ -4094,8 +4154,8 @@
             <span class="ident">ratelimiter</span>: <span class="ident">Ratelimiter::new</span>(<span class="ident">client2</span>, <span class="ident">token</span>.<span class="ident">to_string</span>()),
             <span class="ident">ratelimiter_disabled</span>: <span class="bool-val">false</span>,
             <span class="ident">proxy</span>: <span class="prelude-val">None</span>,
+            <span class="ident">user_ctx</span>: <span class="kw">if</span> <span class="ident">token</span>.<span class="ident">starts_with</span>(<span class="string">&quot;Bot &quot;</span>) { <span class="prelude-val">Some</span>(<span class="ident">Default::default</span>()) } <span class="kw">else</span> { <span class="prelude-val">None</span> },
             <span class="ident">token</span>: <span class="ident">token</span>.<span class="ident">to_string</span>(),
-            <span class="ident">user_ctx</span>: <span class="prelude-val">None</span>,
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;unstable_discord_api&quot;</span>)]</span>
             <span class="ident">application_id</span>: <span class="number">0</span>,
         }
@@ -4593,11 +4653,18 @@
         <span class="kw">static</span> <span class="ident">HEADERS</span>: <span class="ident">OnceCell</span><span class="op">&lt;</span><span class="ident">Headers</span><span class="op">&lt;</span><span class="ident">HeaderValue</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">OnceCell::new</span>();
         <span class="self">self</span>.<span class="ident">fire</span>(<span class="ident">Request</span> {
             <span class="ident">body</span>: <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">body</span>),
-            <span class="ident">headers</span>: <span class="prelude-val">Some</span>(<span class="ident">HEADERS</span>.<span class="ident">get_or_init</span>(<span class="op">|</span><span class="op">|</span> {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">headers</span> <span class="op">=</span> <span class="ident">Headers::with_capacity</span>(<span class="number">1</span>);
-                <span class="ident">headers</span>.<span class="ident">insert</span>(<span class="string">&quot;x-context-properties&quot;</span>, <span class="ident">HeaderValue::from_static</span>(<span class="string">&quot;eyJsb2NhdGlvbiI6IlVzZXIgUHJvZmlsZSJ9&quot;</span>));
-                <span class="ident">headers</span>
-            }).<span class="ident">clone</span>()),
+            <span class="ident">headers</span>: <span class="prelude-val">Some</span>(
+                <span class="ident">HEADERS</span>
+                    .<span class="ident">get_or_init</span>(<span class="op">|</span><span class="op">|</span> {
+                        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">headers</span> <span class="op">=</span> <span class="ident">Headers::with_capacity</span>(<span class="number">1</span>);
+                        <span class="ident">headers</span>.<span class="ident">insert</span>(
+                            <span class="string">&quot;x-context-properties&quot;</span>,
+                            <span class="ident">HeaderValue::from_static</span>(<span class="string">&quot;eyJsb2NhdGlvbiI6IlVzZXIgUHJvZmlsZSJ9&quot;</span>),
+                        );
+                        <span class="ident">headers</span>
+                    })
+                    .<span class="ident">clone</span>(),
+            ),
             <span class="ident">route</span>: <span class="ident">RouteInfo::CreatePrivateChannel</span>,
         })
         .<span class="kw">await</span>
@@ -5742,16 +5809,20 @@
         <span class="kw">let</span> <span class="ident">body</span> <span class="op">=</span> <span class="ident">serde_json::to_vec</span>(<span class="ident">map</span>)<span class="question-mark">?</span>;
 
         <span class="kw">static</span> <span class="ident">HEADERS</span>: <span class="ident">OnceCell</span><span class="op">&lt;</span><span class="ident">Headers</span><span class="op">&lt;</span><span class="ident">HeaderValue</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">OnceCell::new</span>();
-        
-       
+
         <span class="kw">let</span> <span class="ident">response</span> <span class="op">=</span> <span class="self">self</span>
             .<span class="ident">request</span>(<span class="ident">Request</span> {
                 <span class="ident">body</span>: <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">body</span>),
-                <span class="ident">headers</span>: <span class="prelude-val">Some</span>(<span class="ident">HEADERS</span>.<span class="ident">get_or_init</span>(<span class="op">|</span><span class="op">|</span>{
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">headers</span> <span class="op">=</span> <span class="ident">Headers::new</span>();
-                    <span class="ident">headers</span>.<span class="ident">insert</span>(<span class="ident">CONTENT_TYPE</span>, <span class="ident">HeaderValue::from_static</span>(<span class="string">&quot;application/json&quot;</span>));
-                    <span class="ident">headers</span>
-                }).<span class="ident">clone</span>()),    
+                <span class="ident">headers</span>: <span class="prelude-val">Some</span>(
+                    <span class="ident">HEADERS</span>
+                        .<span class="ident">get_or_init</span>(<span class="op">|</span><span class="op">|</span> {
+                            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">headers</span> <span class="op">=</span> <span class="ident">Headers::new</span>();
+                            <span class="ident">headers</span>
+                                .<span class="ident">insert</span>(<span class="ident">CONTENT_TYPE</span>, <span class="ident">HeaderValue::from_static</span>(<span class="string">&quot;application/json&quot;</span>));
+                            <span class="ident">headers</span>
+                        })
+                        .<span class="ident">clone</span>(),
+                ),
                 <span class="ident">route</span>: <span class="ident">RouteInfo::ExecuteWebhook</span> {
                     <span class="ident">token</span>,
                     <span class="ident">wait</span>,
@@ -6064,6 +6135,34 @@
                 <span class="ident">channel_id</span>,
                 <span class="ident">before</span>,
                 <span class="ident">limit</span>,
+            },
+        })
+        .<span class="kw">await</span>
+    }
+
+    <span class="doccomment">/// Joins [`Guild`] or [`Group`] from an invite string, returns a [`Invite`]</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Errors</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// When using this on a Bot token</span>
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">join_invite</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">code</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Invite</span><span class="op">&gt;</span> {
+        <span class="kw">static</span> <span class="ident">HEADERS</span>: <span class="ident">OnceCell</span><span class="op">&lt;</span><span class="ident">Headers</span><span class="op">&lt;</span><span class="ident">HeaderValue</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">OnceCell::new</span>();
+        <span class="self">self</span>.<span class="ident">fire</span>(<span class="ident">Request</span> {
+            <span class="ident">body</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;{}&quot;</span>.<span class="ident">as_bytes</span>()),
+            <span class="ident">headers</span>: <span class="prelude-val">Some</span>(
+                <span class="ident">HEADERS</span>
+                    .<span class="ident">get_or_init</span>(<span class="op">|</span><span class="op">|</span> {
+                        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">headers</span> <span class="op">=</span> <span class="ident">Headers::with_capacity</span>(<span class="number">1</span>);
+                        <span class="ident">headers</span>.<span class="ident">insert</span>(
+                            <span class="string">&quot;x-context-properties&quot;</span>,
+                            <span class="ident">HeaderValue::from_static</span>(<span class="string">&quot;eyJsb2NhdGlvbiI6Ik1hcmtkb3duIExpbmsifQ==&quot;</span>),
+                        );
+                        <span class="ident">headers</span>
+                    })
+                    .<span class="ident">clone</span>(),
+            ),
+            <span class="ident">route</span>: <span class="ident">RouteInfo::JoinInvite</span> {
+                <span class="ident">code</span>,
             },
         })
         .<span class="kw">await</span>
@@ -6401,6 +6500,24 @@
             <span class="ident">headers</span>: <span class="prelude-val">None</span>,
             <span class="ident">route</span>: <span class="ident">RouteInfo::GetGuildPreview</span> {
                 <span class="ident">guild_id</span>,
+            },
+        })
+        .<span class="kw">await</span>
+    }
+
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_guild_verification_form</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">guild_id</span>: <span class="ident">u64</span>,
+        <span class="ident">with_guild</span>: <span class="ident">bool</span>,
+        <span class="ident">code</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">GuildVerificatiomForm</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">fire</span>(<span class="ident">Request</span> {
+            <span class="ident">body</span>: <span class="prelude-val">None</span>,
+            <span class="ident">headers</span>: <span class="prelude-val">None</span>,
+            <span class="ident">route</span>: <span class="ident">RouteInfo::GetGuildVerificationForm</span> {
+                <span class="ident">guild_id</span>,
+                <span class="ident">with_guild</span>,
+                <span class="ident">code</span>,
             },
         })
         .<span class="kw">await</span>
@@ -7375,12 +7492,8 @@
     <span class="doccomment">/// [`Error::Http`]: crate::error::Error::Http</span>
     <span class="doccomment">/// [`Error::Json`]: crate::error::Error::Json</span>
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">fire</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">DeserializeOwned</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">req</span>: <span class="ident">Request</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-        <span class="macro">println!</span>(<span class="string">&quot;{:#?}&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">req</span>);
         <span class="kw">let</span> <span class="ident">response</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">request</span>(<span class="ident">req</span>).<span class="kw">await</span><span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">res_json</span> <span class="op">=</span> <span class="ident">response</span>.<span class="ident">json</span>::<span class="op">&lt;</span><span class="ident">serde_json::Value</span><span class="op">&gt;</span>().<span class="kw">await</span>;
-        <span class="macro">println!</span>(<span class="string">&quot;{:#?}&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">res_json</span>);
-        <span class="ident">serde_json::from_value</span>(<span class="ident">res_json</span>.<span class="ident">unwrap</span>()).<span class="ident">map_err</span>(<span class="ident">From::from</span>)
-        <span class="comment">// response.json::&lt;T&gt;().await.map_err(From::from)</span>
+        <span class="ident">response</span>.<span class="ident">json</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>().<span class="kw">await</span>.<span class="ident">map_err</span>(<span class="ident">From::from</span>)
     }
 
     <span class="doccomment">/// Performs a request, ratelimiting it if necessary.</span>
@@ -7428,6 +7541,7 @@
 
         <span class="kw">let</span> <span class="ident">response</span> <span class="op">=</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">ratelimiter_disabled</span> {
             <span class="kw">let</span> <span class="ident">request</span> <span class="op">=</span> <span class="ident">req</span>.<span class="ident">build</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">client</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">token</span>, <span class="self">self</span>.<span class="ident">proxy</span>.<span class="ident">as_ref</span>())<span class="question-mark">?</span>.<span class="ident">build</span>()<span class="question-mark">?</span>;
+            <span class="macro">println!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">request</span>);
             <span class="self">self</span>.<span class="ident">client</span>.<span class="ident">execute</span>(<span class="ident">request</span>).<span class="kw">await</span><span class="question-mark">?</span>
         } <span class="kw">else</span> {
             <span class="kw">let</span> <span class="ident">ratelimiting_req</span> <span class="op">=</span> <span class="ident">RatelimitedRequest::from</span>(<span class="ident">req</span>);
@@ -7496,5 +7610,5 @@
     }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="serenity" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.61.0-nightly (8d60bf427 2022-03-19)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="serenity" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.61.0-nightly (c84f39e6c 2022-03-20)" ></div>
 </body></html>

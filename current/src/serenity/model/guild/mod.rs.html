@@ -3349,6 +3349,27 @@
 <span id="3344">3344</span>
 <span id="3345">3345</span>
 <span id="3346">3346</span>
+<span id="3347">3347</span>
+<span id="3348">3348</span>
+<span id="3349">3349</span>
+<span id="3350">3350</span>
+<span id="3351">3351</span>
+<span id="3352">3352</span>
+<span id="3353">3353</span>
+<span id="3354">3354</span>
+<span id="3355">3355</span>
+<span id="3356">3356</span>
+<span id="3357">3357</span>
+<span id="3358">3358</span>
+<span id="3359">3359</span>
+<span id="3360">3360</span>
+<span id="3361">3361</span>
+<span id="3362">3362</span>
+<span id="3363">3363</span>
+<span id="3364">3364</span>
+<span id="3365">3365</span>
+<span id="3366">3366</span>
+<span id="3367">3367</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Models relating to guilds and types that it owns.</span>
 
 <span class="comment">// FIXME: Remove after the removal of the `̀nsfw` field and the `GuildEmbed` structure.</span>
@@ -6163,6 +6184,27 @@
     <span class="ident">Id</span>(<span class="ident">GuildId</span>),
 }
 
+<span class="doccomment">/// Information relating to the forms contained within a guild&#39;s verification form.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">GuildFormField</span> {
+    <span class="kw">pub</span> <span class="ident">description</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">field_type</span>: <span class="ident">String</span>,
+    <span class="kw">pub</span> <span class="ident">label</span>: <span class="ident">String</span>,
+    <span class="kw">pub</span> <span class="ident">required</span>: <span class="ident">bool</span>,
+    <span class="kw">pub</span> <span class="ident">values</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>
+}
+
+<span class="doccomment">/// Information relating to a guild&#39;s verification form.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">GuildVerificatiomForm</span> {
+     <span class="doccomment">/// The server description shown in the verification form.</span>
+     <span class="kw">pub</span> <span class="ident">description</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+     <span class="doccomment">/// The fields shown in the verification form.</span>
+     <span class="kw">pub</span> <span class="ident">form_fields</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">GuildFormField</span><span class="op">&gt;</span>,
+     <span class="doccomment">/// The version of the shown form.</span>
+     <span class="kw">pub</span> <span class="ident">version</span>: <span class="ident">DateTime</span><span class="op">&lt;</span><span class="ident">Utc</span><span class="op">&gt;</span>
+}
+
 <span class="doccomment">/// Information relating to a guild&#39;s welcome screen.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">GuildWelcomeScreen</span> {
@@ -6696,5 +6738,5 @@
     }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="serenity" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.61.0-nightly (8d60bf427 2022-03-19)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="serenity" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.61.0-nightly (c84f39e6c 2022-03-20)" ></div>
 </body></html>
