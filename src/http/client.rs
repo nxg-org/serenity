@@ -2702,7 +2702,7 @@ impl Http {
         guild_id: u64,
         with_guild: bool,
         code: &str,
-    ) -> Result<GuildVerificatiomForm> {
+    ) -> Result<GuildVerificationForm> {
         self.fire(Request {
             body: None,
             headers: None,
@@ -3583,6 +3583,38 @@ impl Http {
             },
         })
         .await
+    }
+
+    pub async fn submit_verification_form(&self, guild_id: u64, map: &Value) -> Result<()> {
+        let body = serde_json::to_vec(map)?;
+
+        self.fire(Request {
+            body: Some(&body),
+            headers: None,
+            route: RouteInfo::SubmitVerificationForm {
+                guild_id
+            }
+        }).await
+
+        // static HEADERS: OnceCell<Headers<HeaderValue>> = OnceCell::new();
+        // self.wind(200, Request {
+        //     body: Some(&body),
+        //     headers: Some(
+        //         HEADERS
+        //             .get_or_init(|| {
+        //                 let mut headers = Headers::with_capacity(1);
+        //                 headers.insert(
+        //                     "x-context-properties",
+        //                     HeaderValue::from_static("eyJsb2NhdGlvbiI6IlVzZXIgUHJvZmlsZSJ9"),
+        //                 );
+        //                 headers
+        //             })
+        //             .clone(),
+        //     ),
+        //     route: RouteInfo::SubmitVerificationForm {
+        //         guild_id
+        //     }
+        // }).await
     }
 
     /// Starts typing in the specified [`Channel`] for an indefinite period of time.

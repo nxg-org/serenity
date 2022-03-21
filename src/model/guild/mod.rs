@@ -2824,13 +2824,41 @@ pub struct GuildFormField {
 
 /// Information relating to a guild's verification form.
 #[derive(Clone, Debug, Deserialize, Serialize)]
-pub struct GuildVerificatiomForm {
+pub struct GuildVerificationForm {
      /// The server description shown in the verification form.
      pub description: Option<String>,
      /// The fields shown in the verification form.
      pub form_fields: Vec<GuildFormField>,
      /// The version of the shown form.
      pub version: DateTime<Utc>
+}
+
+// impl Into<GuildVerificationFormSubmission> for GuildVerificationForm {
+//     fn into(self) -> GuildVerificationFormSubmission {
+//         GuildVerificationFormSubmission {
+//             form_fields: self.form_fields,
+//             version: self.version
+//         }
+//     }
+// }
+
+/// Information relating to the form submitted to verify in a server.
+#[derive(Clone, Debug, Deserialize, Serialize)]
+pub struct GuildVerificationFormSubmission {
+         /// The fields shown in the verification form.
+         pub form_fields: Vec<GuildFormField>,
+         /// The version of the shown form.
+         pub version: DateTime<Utc>
+
+}
+
+impl From<GuildVerificationForm> for GuildVerificationFormSubmission {
+    fn from(a: GuildVerificationForm) -> Self {
+        Self {
+            form_fields: a.form_fields,
+            version: a.version
+        }
+    }
 }
 
 /// Information relating to a guild's welcome screen.
