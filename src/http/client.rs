@@ -11,6 +11,7 @@ use std::{
 
 use bytes::buf::Buf;
 use futures::future::BoxFuture;
+use once_cell::sync::OnceCell;
 use percent_encoding::{utf8_percent_encode, NON_ALPHANUMERIC};
 use reqwest::{
     header::{HeaderMap as Headers, HeaderValue, AUTHORIZATION, CONTENT_TYPE, USER_AGENT},
@@ -22,7 +23,6 @@ use serde::de::DeserializeOwned;
 use serde_json::json;
 use tokio::{fs::File, io::AsyncReadExt};
 use tracing::{debug, instrument, trace};
-use once_cell::sync::OnceCell;
 
 use super::{
     ratelimiting::{RatelimitedRequest, Ratelimiter},
@@ -264,9 +264,10 @@ impl Default for UserRequestContext {
 
         // This is bad. Fix later.
         headers.insert("x-discord-locale", HeaderValue::from_static("en-US"));
-        
 
-        Self { headers }
+        Self {
+            headers,
+        }
     }
 }
 
@@ -279,7 +280,7 @@ impl UserRequestContext {
         // headers.insert(ACCEPT, HeaderValue::from_static("*/*"));
         // headers.insert(CONNECTION, HeaderValue::from_static("keep-alive"));
         // headers.insert(HOST, HeaderValue::from_static("discord.com"));
-        
+
         headers.insert(USER_AGENT, HeaderValue::from_str(user_agent).expect("Invalid user agent."));
 
         headers.insert("cookie", HeaderValue::from_str(&cookies).expect("Invalid cookies."));
@@ -287,7 +288,7 @@ impl UserRequestContext {
 
         // This is bad. Fix later.
         headers.insert("x-discord-locale", HeaderValue::from_static("en-US"));
-        
+
         #[allow(clippy::unwrap_used)]
         headers.insert("x-super-properties", HeaderValue::from_str(&props).unwrap());
 
@@ -297,10 +298,12 @@ impl UserRequestContext {
     }
 
     pub fn set_user_agent(mut self, user_agent: &str) -> Self {
-        self.headers.insert(USER_AGENT, HeaderValue::from_str(user_agent).expect("Invalid user agent."));
+        self.headers
+            .insert(USER_AGENT, HeaderValue::from_str(user_agent).expect("Invalid user agent."));
         self.headers.insert(
             "x-super-properties",
-            HeaderValue::from_str(&build_super_properties(user_agent)).expect("Invalid user agent for super properties."),
+            HeaderValue::from_str(&build_super_properties(user_agent))
+                .expect("Invalid user agent for super properties."),
         );
         self
     }
@@ -343,8 +346,8 @@ impl Http {
             ratelimiter: Ratelimiter::new(client2, token.to_string()),
             ratelimiter_disabled: false,
             proxy: None,
+            user_ctx: if token.starts_with("Bot ") { Some(Default::default()) } else { None },
             token: token.to_string(),
-            user_ctx: None,
             #[cfg(feature = "unstable_discord_api")]
             application_id: 0,
         }
@@ -842,11 +845,18 @@ impl Http {
         static HEADERS: OnceCell<Headers<HeaderValue>> = OnceCell::new();
         self.fire(Request {
             body: Some(&body),
-            headers: Some(HEADERS.get_or_init(|| {
-                let mut headers = Headers::with_capacity(1);
-                headers.insert("x-context-properties", HeaderValue::from_static("eyJsb2NhdGlvbiI6IlVzZXIgUHJvZmlsZSJ9"));
-                headers
-            }).clone()),
+            headers: Some(
+                HEADERS
+                    .get_or_init(|| {
+                        let mut headers = Headers::with_capacity(1);
+                        headers.insert(
+                            "x-context-properties",
+                            HeaderValue::from_static("eyJsb2NhdGlvbiI6IlVzZXIgUHJvZmlsZSJ9"),
+                        );
+                        headers
+                    })
+                    .clone(),
+            ),
             route: RouteInfo::CreatePrivateChannel,
         })
         .await
@@ -1991,16 +2001,20 @@ impl Http {
         let body = serde_json::to_vec(map)?;
 
         static HEADERS: OnceCell<Headers<HeaderValue>> = OnceCell::new();
-        
-       
+
         let response = self
             .request(Request {
                 body: Some(&body),
-                headers: Some(HEADERS.get_or_init(||{
-                    let mut headers = Headers::new();
-                    headers.insert(CONTENT_TYPE, HeaderValue::from_static("application/json"));
-                    headers
-                }).clone()),    
+                headers: Some(
+                    HEADERS
+                        .get_or_init(|| {
+                            let mut headers = Headers::new();
+                            headers
+                                .insert(CONTENT_TYPE, HeaderValue::from_static("application/json"));
+                            headers
+                        })
+                        .clone(),
+                ),
                 route: RouteInfo::ExecuteWebhook {
                     token,
                     wait,
@@ -2313,6 +2327,34 @@ impl Http {
                 channel_id,
                 before,
                 limit,
+            },
+        })
+        .await
+    }
+
+    /// Joins [`Guild`] or [`Group`] from an invite string, returns a [`Invite`]
+    ///
+    /// # Errors
+    ///
+    /// When using this on a Bot token
+    pub async fn join_invite(&self, code: &str) -> Result<Invite> {
+        static HEADERS: OnceCell<Headers<HeaderValue>> = OnceCell::new();
+        self.fire(Request {
+            body: Some("{}".as_bytes()),
+            headers: Some(
+                HEADERS
+                    .get_or_init(|| {
+                        let mut headers = Headers::with_capacity(1);
+                        headers.insert(
+                            "x-context-properties",
+                            HeaderValue::from_static("eyJsb2NhdGlvbiI6Ik1hcmtkb3duIExpbmsifQ=="),
+                        );
+                        headers
+                    })
+                    .clone(),
+            ),
+            route: RouteInfo::JoinInvite {
+                code,
             },
         })
         .await
@@ -2650,6 +2692,24 @@ impl Http {
             headers: None,
             route: RouteInfo::GetGuildPreview {
                 guild_id,
+            },
+        })
+        .await
+    }
+
+    pub async fn get_guild_verification_form(
+        &self,
+        guild_id: u64,
+        with_guild: bool,
+        code: &str,
+    ) -> Result<GuildVerificatiomForm> {
+        self.fire(Request {
+            body: None,
+            headers: None,
+            route: RouteInfo::GetGuildVerificationForm {
+                guild_id,
+                with_guild,
+                code,
             },
         })
         .await
@@ -3624,12 +3684,8 @@ impl Http {
     /// [`Error::Http`]: crate::error::Error::Http
     /// [`Error::Json`]: crate::error::Error::Json
     pub async fn fire<T: DeserializeOwned>(&self, req: Request<'_>) -> Result<T> {
-        println!("{:#?}", &req);
         let response = self.request(req).await?;
-        let res_json = response.json::<serde_json::Value>().await;
-        println!("{:#?}", &res_json);
-        serde_json::from_value(res_json.unwrap()).map_err(From::from)
-        // response.json::<T>().await.map_err(From::from)
+        response.json::<T>().await.map_err(From::from)
     }
 
     /// Performs a request, ratelimiting it if necessary.
@@ -3677,6 +3733,7 @@ impl Http {
 
         let response = if self.ratelimiter_disabled {
             let request = req.build(&self.client, &self.token, self.proxy.as_ref())?.build()?;
+            println!("{:?}", &request);
             self.client.execute(request).await?
         } else {
             let ratelimiting_req = RatelimitedRequest::from(req);

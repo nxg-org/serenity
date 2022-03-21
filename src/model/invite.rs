@@ -24,6 +24,17 @@ use crate::utils;
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[non_exhaustive]
 pub struct Invite {
+
+    #[serde(rename = "type")]
+    pub kind: u8,
+    
+    pub new_member: Option<bool>,
+
+    pub show_verification_form: Option<bool>,
+
+    pub expires_at: Option<DateTime<Utc>>,
+    
+
     /// The approximate number of [`Member`]s in the related [`Guild`].
     pub approximate_member_count: Option<u64>,
     /// The approximate number of [`Member`]s with an active session in the
@@ -164,6 +175,44 @@ impl Invite {
         http.as_ref().get_invite(invite, stats).await
     }
 
+    /// Joins the Invite to a [`Guild`] or [`Group`]
+    /// 
+    /// # Bots
+    /// 
+    /// This does not work for bot accounts, it will fail before
+    /// sending the request
+    /// 
+    /// # Returns
+    /// 
+    /// The [`InviteChannel`] which the invite belongs to and if the target
+    /// was a Guild, also the [`InviteGuild`] received from the Request.
+    pub async fn join(&self, cache_http: impl CacheHttp) -> Result<Invite> {
+        // TODO: Make it so we do not re-join server/guild if already in it.
+
+        #[cfg(feature = "cache")]
+        {
+            if let Some(cache) = cache_http.cache() {
+                let guild_id = self.guild.as_ref().map(|g| g.id);
+                let channel_id = self.channel.id;
+
+                if guild_id.is_some() {
+                    if cache.guilds.read().await.contains_key(&guild_id.unwrap()) {
+                        return Ok(self.to_owned())
+                    }
+                } else {
+                    if cache.groups.read().await.contains_key(&channel_id) {
+                        return Ok(self.to_owned())
+                    }
+                }
+            }
+        }
+
+        cache_http.http().as_ref().join_invite(&self.code).await
+        
+
+
+    }
+
     /// Returns a URL to use for the invite.
     ///
     /// # Examples
@@ -221,6 +270,8 @@ pub struct InviteUser {
     #[serde(deserialize_with = "deserialize_u16")]
     pub discriminator: u16,
     pub avatar: Option<String>,
+    #[serde(rename = "public_flags")]
+    pub flags: u64
 }
 
 /// InviteUser implements a Deref to UserId so it gains the convenience methods
@@ -244,15 +295,40 @@ pub struct InviteChannel {
 }
 
 /// A minimal amount of information about the guild an invite points to.
+/// 
+/// # Bots vs Selfbots
+/// 
+/// Bots only have these fields:
+/// - id 
+/// - name
+/// - icon
+/// - splash
+/// - text_channel_count (Bot exclusive)
+/// - voice_channel_count (Bot exclusive)
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[non_exhaustive]
 pub struct InviteGuild {
+    // both
     pub id: GuildId,
-    pub icon: Option<String>,
     pub name: String,
+    pub icon: Option<String>,
     pub splash: Option<String>,
+    // bot
     pub text_channel_count: Option<u64>,
     pub voice_channel_count: Option<u64>,
+    // selfbot
+    pub features: Option<Vec<String>>,
+    pub banner: Option<String>,
+    pub description: Option<String>,
+    pub nsfw: Option<bool>,
+    pub nsfw_level: Option<NsfwLevel>,
+    pub premium_subscription_count: Option<u32>,
+    pub vanity_url_code: Option<String>,
+    pub verification_level: Option<VerificationLevel>,
+    pub welcome_screen: Option<GuildWelcomeScreen>,
+    // streaming
+    pub target_user: Option<InviteUser>
+
 }
 
 #[cfg(feature = "model")]
@@ -353,8 +429,7 @@ impl RichInvite {
     /// [Manage Guild]: Permissions::MANAGE_GUILD
     /// [permission]: super::permissions
     pub async fn delete(&self, cache_http: impl CacheHttp) -> Result<Invite> {
-        #[cfg(feature = "cache")]
-        {
+        #[cfg(feature = "cache")] {
             if let Some(cache) = cache_http.cache() {
                 let guild_id = self.guild.as_ref().map(|g| g.id);
 

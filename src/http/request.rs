@@ -104,12 +104,14 @@ impl<'a> Request<'a> {
 
         let mut headers = if let Some(request_headers) = request_headers {
             let mut h = request_headers.clone();
-            h.reserve(4);
+            h.reserve(3);
             h
         } else {
-            Headers::with_capacity(4)
+            let mut h = Headers::with_capacity(4);
+            h.insert(USER_AGENT, HeaderValue::from_static(constants::USER_AGENT));
+            h
         };
-        headers.insert(USER_AGENT, HeaderValue::from_static(constants::USER_AGENT));
+       
         headers
             .insert(AUTHORIZATION, HeaderValue::from_str(token).map_err(HttpError::InvalidHeader)?);
 

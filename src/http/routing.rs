@@ -338,6 +338,12 @@ pub enum Route {
     ///
     /// [`GuildId`]: crate::model::id::GuildId
     GuildsIdWebhooks(u64),
+    /// Route for the '/guilds/:guild_id/member-verification` path.
+    /// 
+    /// The data is the relevant [`GuildId`].
+    /// 
+    /// [`GuildId`]: crate::model::id::GuildId
+    GuildsVerificationForm(u64),
     /// Route for the `/guilds/:guild_id/welcome-screen` path.
     ///
     /// The data is the relevant [`GuildId`].
@@ -808,6 +814,15 @@ impl Route {
     pub fn guild_vanity_url(guild_id: u64) -> String {
         format!(api!("/guilds/{}/vanity-url"), guild_id)
     }
+
+    pub fn guild_verification_form(guild_id: u64) -> String {
+        format!(api!("/guilds/{}/member-verification"), guild_id)
+    }
+
+    pub fn guild_verification_form_optioned(guild_id: u64, with_guild: bool, invite_code: &str) -> String {
+        format!(api!("/guilds/{}/member-verification?with_guild={}&invite_code={}"), guild_id, with_guild, invite_code)
+    }
+
 
     pub fn guild_voice_states(guild_id: u64, user_id: u64) -> String {
         format!(api!("/guilds/{}/voice-states/{}"), guild_id, user_id)
@@ -1435,6 +1450,11 @@ pub enum RouteInfo<'a> {
     GetGuildPreview {
         guild_id: u64,
     },
+    GetGuildVerificationForm {
+        guild_id: u64,
+        with_guild: bool,
+        code: &'a str
+    },
     GetGuildWelcomeScreen {
         guild_id: u64,
     },
@@ -1516,6 +1536,9 @@ pub enum RouteInfo<'a> {
     GetWebhookWithToken {
         token: &'a str,
         webhook_id: u64,
+    },
+    JoinInvite {
+        code: &'a str
     },
     KickMember {
         guild_id: u64,
@@ -2439,6 +2462,15 @@ impl<'a> RouteInfo<'a> {
                 Route::GuildsIdPreview(guild_id),
                 Cow::from(Route::guild_preview(guild_id)),
             ),
+            RouteInfo::GetGuildVerificationForm {
+                guild_id,
+                with_guild,
+                code
+            } => (
+                LightMethod::Get,
+                Route::GuildsIdWelcomeScreen(guild_id),
+                Cow::from(Route::guild_verification_form_optioned(guild_id, with_guild, code)),
+            ),
             RouteInfo::GetGuildWelcomeScreen {
                 guild_id,
             } => (
@@ -2612,6 +2644,14 @@ impl<'a> RouteInfo<'a> {
                 LightMethod::Get,
                 Route::WebhooksId(webhook_id),
                 Cow::from(Route::webhook_with_token(webhook_id, token)),
+            ),
+
+            RouteInfo::JoinInvite {
+                code,
+            } => (
+                LightMethod::Post,
+                Route::InvitesCode,
+                Cow::from(Route::invite(code)),
             ),
             RouteInfo::KickMember {
                 guild_id,

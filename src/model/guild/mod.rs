@@ -2812,6 +2812,27 @@ pub enum GuildContainer {
     Id(GuildId),
 }
 
+/// Information relating to the forms contained within a guild's verification form.
+#[derive(Clone, Debug, Deserialize, Serialize)]
+pub struct GuildFormField {
+    pub description: Option<String>,
+    pub field_type: String,
+    pub label: String,
+    pub required: bool,
+    pub values: Vec<String>
+}
+
+/// Information relating to a guild's verification form.
+#[derive(Clone, Debug, Deserialize, Serialize)]
+pub struct GuildVerificatiomForm {
+     /// The server description shown in the verification form.
+     pub description: Option<String>,
+     /// The fields shown in the verification form.
+     pub form_fields: Vec<GuildFormField>,
+     /// The version of the shown form.
+     pub version: DateTime<Utc>
+}
+
 /// Information relating to a guild's welcome screen.
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct GuildWelcomeScreen {
