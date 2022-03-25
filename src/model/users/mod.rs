@@ -1,8 +1,11 @@
 //! Selfbot specific api parts
+//! 
+use std::ops::Deref;
 
+use crate::model::deserialize_u16;
 use super::{
     id::{ChannelId, GuildId, MessageId, UserId},
-    prelude::OnlineStatus,
+    prelude::OnlineStatus, user::UserPublicFlags,
 };
 
 /// Summary of messages since last login.
@@ -22,7 +25,7 @@ pub struct ReadState {
 }
 
 /// The type of a relationship between two users.
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, PartialEq, Deserialize, Serialize)]
 pub enum RelationshipType {
     /// When a friend request was ignored.
     Ignored = 0,
@@ -48,11 +51,37 @@ pub struct Relationship {
     /// Id of the first relationship participant.
     #[serde(skip_serializing)]
     pub id: UserId,
+    /// Nickname of the user. Users only.
+    pub nickname: Option<String>,
     /// Type of the relationship such as blocked, friends etc.
     #[serde(rename = "type")]
     pub kind: RelationshipType,
+    /// User associated with the relationship.
+    pub user: RequestUser
 }
 
+#[derive(Default, Clone, Debug, Deserialize, Serialize)]
+#[serde(default)]
+pub struct RequestUser {
+    pub id: UserId,
+    #[serde(rename = "username")]
+    pub name: String,
+    #[serde(deserialize_with = "deserialize_u16")]
+    pub discriminator: u16,
+    pub avatar: Option<String>,
+    #[serde(rename = "public_flags")]
+    pub flags: Option<UserPublicFlags>
+}
+
+/// RequestUser implements a Deref to UserId so it gains the convenience methods
+/// for converting it into a [`User`] instance.
+impl Deref for RequestUser {
+    type Target = UserId;
+
+    fn deref(&self) -> &Self::Target {
+        &self.id
+    }
+}
 /// The current user's progress through the Discord tutorial.
 #[derive(Default, Clone, Debug, Deserialize, Serialize)]
 #[serde(default)]

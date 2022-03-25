@@ -1,6 +1,5 @@
 //! Models for server and channel invites.
 
-use std::ops::Deref;
 
 use chrono::{DateTime, Utc};
 
@@ -56,7 +55,7 @@ pub struct Invite {
     ///
     /// This can be [`None`] for invites created by Discord such as invite-widgets
     /// or vanity invite links.
-    pub inviter: Option<InviteUser>,
+    pub inviter: Option<RequestUser>,
 
     /// The type of target for this voice channel invite.
     pub target_type: Option<InviteTargetType>,
@@ -260,29 +259,7 @@ impl Invite {
     }
 }
 
-/// A minimal amount of information about the inviter (person who created the invite).
-#[derive(Clone, Debug, Deserialize, Serialize)]
-#[non_exhaustive]
-pub struct InviteUser {
-    pub id: UserId,
-    #[serde(rename = "username")]
-    pub name: String,
-    #[serde(deserialize_with = "deserialize_u16")]
-    pub discriminator: u16,
-    pub avatar: Option<String>,
-    #[serde(rename = "public_flags")]
-    pub flags: u64
-}
 
-/// InviteUser implements a Deref to UserId so it gains the convenience methods
-/// for converting it into a [`User`] instance.
-impl Deref for InviteUser {
-    type Target = UserId;
-
-    fn deref(&self) -> &Self::Target {
-        &self.id
-    }
-}
 
 /// A minimal amount of information about the channel an invite points to.
 #[non_exhaustive]
@@ -327,7 +304,7 @@ pub struct InviteGuild {
     pub verification_level: Option<VerificationLevel>,
     pub welcome_screen: Option<GuildWelcomeScreen>,
     // streaming
-    pub target_user: Option<InviteUser>
+    pub target_user: Option<RequestUser>
 
 }
 

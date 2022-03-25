@@ -231,7 +231,7 @@ impl<'a> Future for HttpBuilder<'a> {
 }
 
 #[repr(transparent)]
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct UserRequestContext {
     headers: reqwest::header::HeaderMap,
 }
@@ -323,6 +323,16 @@ pub struct Http {
     pub user_ctx: Option<UserRequestContext>,
     #[cfg(feature = "unstable_discord_api")]
     pub application_id: u64,
+}
+
+impl PartialEq for Http {
+    fn ne(&self, other: &Self) -> bool {
+        self.ratelimiter_disabled != other.ratelimiter_disabled || self.proxy != other.proxy || self.token != other.token || self.user_ctx != other.user_ctx
+    }
+
+    fn eq(&self, other: &Self) -> bool {
+        self.ratelimiter_disabled == other.ratelimiter_disabled && self.proxy == other.proxy && self.token == other.token && self.user_ctx == other.user_ctx 
+    }
 }
 
 impl fmt::Debug for Http {
@@ -845,7 +855,8 @@ impl Http {
         static HEADERS: OnceCell<Headers<HeaderValue>> = OnceCell::new();
         self.fire(Request {
             body: Some(&body),
-            headers: Some(
+            //if &self.token[..3] == "Bot" {
+            headers:  Some(
                 HEADERS
                     .get_or_init(|| {
                         let mut headers = Headers::with_capacity(1);
@@ -857,6 +868,7 @@ impl Http {
                     })
                     .clone(),
             ),
+            //} else { None },
             route: RouteInfo::CreatePrivateChannel,
         })
         .await
@@ -3060,13 +3072,32 @@ impl Http {
         .await
     }
 
+    /// Find relationship with other user by sorting through all relationships. Slow.
     pub async fn get_relationship(&self, user_id: u64) -> Result<Relationship> {
+        match self.get_all_relationships().await?.into_iter().find(|rel| rel.id.0 == user_id) {
+            Some(rel) => Ok(rel),
+            None => panic!("Did not find user."),
+        }
+    }
+
+    /// Endpoint for getting mutual relationships. For bots, this may be different.
+    pub async fn get_mutual_relationships(&self, user_id: u64) -> Result<Vec<RequestUser>> {
         self.fire(Request {
             body: None,
             headers: None,
             route: RouteInfo::GetUserRelationship {
                 user_id,
             },
+        })
+        .await
+    }
+
+    /// Endpoint for getting all friends. For bots, this may be different. Requires testing.
+    pub async fn get_all_relationships(&self) -> Result<Vec<Relationship>> {
+        self.fire(Request {
+            body: None,
+            headers: None,
+            route: RouteInfo::GetUserMeRelationship
         })
         .await
     }
@@ -3430,6 +3461,30 @@ impl Http {
         .await
     }
 
+    #[inline]
+    pub async fn remove_friend_request(&self, user_id: u64) -> Result<()> {
+        static HEADERS: OnceCell<Headers<HeaderValue>> = OnceCell::new();
+        self.wind(204, Request {
+            body: None,
+            headers: Some(
+                HEADERS
+                    .get_or_init(|| {
+                        let mut headers = Headers::with_capacity(1);
+                        headers.insert(
+                            "x-context-properties",
+                            HeaderValue::from_static("eyJsb2NhdGlvbiI6IlVzZXIgUHJvZmlsZSJ9"),
+                        );
+                        headers
+                    })
+                    .clone(),
+            ),
+            route: RouteInfo::RemoveUserMeRelationship {
+                user_id,
+            },
+        })
+        .await
+    }
+
     /// Deletes a single [`Role`] from a [`Member`] in a [`Guild`].
     ///
     /// **Note**: Requires the [Manage Roles] permission and respect of role
@@ -3505,10 +3560,23 @@ impl Http {
     /// Sends a friend request to the specified [`User`]
     #[inline]
     pub async fn send_friend_request(&self, user_id: u64) -> Result<()> {
+        static HEADERS: OnceCell<Headers<HeaderValue>> = OnceCell::new();
+
         self.wind(204, Request {
             body: Some(b"{}"),
-            headers: None,
-            route: RouteInfo::EditUserRelationship {
+            headers: Some(
+                HEADERS
+                    .get_or_init(|| {
+                        let mut headers = Headers::with_capacity(1);
+                        headers.insert(
+                            "x-context-properties",
+                            HeaderValue::from_static("eyJsb2NhdGlvbiI6IlVzZXIgUHJvZmlsZSJ9"),
+                        );
+                        headers
+                    })
+                    .clone(),
+            ),
+            route: RouteInfo::EditUserMeRelationship {
                 user_id,
             },
         })
@@ -3592,9 +3660,10 @@ impl Http {
             body: Some(&body),
             headers: None,
             route: RouteInfo::SubmitVerificationForm {
-                guild_id
-            }
-        }).await
+                guild_id,
+            },
+        })
+        .await
 
         // static HEADERS: OnceCell<Headers<HeaderValue>> = OnceCell::new();
         // self.wind(200, Request {

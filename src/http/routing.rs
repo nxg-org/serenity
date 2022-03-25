@@ -368,6 +368,10 @@ pub enum Route {
     UsersId,
     /// Route for the `/users/:user_id/relationships` path
     UsersIdRelationships,
+    /// Route for the `/users/@me/relationships` path
+    UsersMeRelationships,
+    /// Route for the `/users/@me/relationships/:user_id` path
+    UsersMeIdRelationships,
     /// Route for the `/users/@me` path.
     UsersMe,
     /// Route for the `/users/@me/channels` path.
@@ -891,6 +895,14 @@ impl Route {
 
     pub fn user_relationships(user_id: u64) -> String {
         format!(api!("/users/{}/relationships"), user_id)
+    }
+
+    pub fn user_relationships_me() -> &'static str {
+        api!("/users/@me/relationships")
+    }
+
+    pub fn user_me_relationships_id(user_id: u64) -> String {
+        format!(api!("/users/@me/relationships/{}"), user_id)
     }
 
     pub fn user_me_connections() -> &'static str {
@@ -1538,6 +1550,10 @@ pub enum RouteInfo<'a> {
     GetUserRelationship {
         user_id: u64,
     },
+    GetUserMeRelationship,
+    GetUserMeRelationshipId {
+        user_id: u64,
+    },
     GetVoiceRegions,
     GetWebhook {
         webhook_id: u64,
@@ -1568,6 +1584,9 @@ pub enum RouteInfo<'a> {
         guild_id: u64,
         user_id: u64,
     },
+    RemoveUserMeRelationship {
+        user_id: u64
+    },
     RemoveMemberRole {
         guild_id: u64,
         role_id: u64,
@@ -1586,6 +1605,9 @@ pub enum RouteInfo<'a> {
         user_id: u64,
     },
     EditUserRelationship {
+        user_id: u64,
+    },
+    EditUserMeRelationship {
         user_id: u64,
     },
     StartGuildPrune {
@@ -2168,6 +2190,13 @@ impl<'a> RouteInfo<'a> {
                 Route::UsersIdRelationships,
                 Cow::from(Route::user_relationships(user_id)),
             ),
+            RouteInfo::EditUserMeRelationship {
+                user_id,
+            } => (
+                LightMethod::Put,
+                Route::UsersMeIdRelationships,
+                Cow::from(Route::user_me_relationships_id(user_id)),
+            ),
             RouteInfo::EditVoiceState {
                 guild_id,
                 user_id,
@@ -2639,6 +2668,18 @@ impl<'a> RouteInfo<'a> {
                 Route::UsersIdRelationships,
                 Cow::from(Route::user_relationships(user_id)),
             ),
+            RouteInfo::GetUserMeRelationship => (
+                LightMethod::Get,
+                Route::UsersMeRelationships,
+                Cow::from(Route::user_relationships_me()),
+            ),
+            RouteInfo::GetUserMeRelationshipId {
+                user_id,
+            } => (
+                LightMethod::Get,
+                Route::UsersMeIdRelationships,
+                Cow::from(Route::user_me_relationships_id(user_id)),
+            ),
             RouteInfo::GetVoiceRegions => {
                 (LightMethod::Get, Route::VoiceRegions, Cow::from(Route::voice_regions()))
             },
@@ -2703,6 +2744,13 @@ impl<'a> RouteInfo<'a> {
                 LightMethod::Delete,
                 Route::GuildsIdBansUserId(guild_id),
                 Cow::from(Route::guild_ban(guild_id, user_id)),
+            ),
+            RouteInfo::RemoveUserMeRelationship {
+                user_id
+            } => (
+                LightMethod::Delete,
+                Route::UsersMeIdRelationships,
+                Cow::from(Route::user_me_relationships_id(user_id)),
             ),
             RouteInfo::RemoveMemberRole {
                 guild_id,
