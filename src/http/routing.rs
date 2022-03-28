@@ -291,9 +291,9 @@ pub enum Route {
     /// [`GuildId`]: crate::model::id::GuildId
     GuildsIdMembersSearch(u64),
     /// Route for the '/guilds/:guild_id/member-verification` path.
-    /// 
+    ///
     /// The data is the relevant [`GuildId`].
-    /// 
+    ///
     /// [`GuildId`]: crate::model::id::GuildId
     GuildsIdMemberVerificationForm(u64),
     /// Route for the `/guilds/:guild_id/prune` path.
@@ -805,8 +805,15 @@ impl Route {
         format!(api!("/guilds/{}/member-verification"), guild_id)
     }
 
-    pub fn guild_member_verification_optioned(guild_id: u64, with_guild: bool, invite_code: &str) -> String {
-        format!(api!("/guilds/{}/member-verification?with_guild={}&invite_code={}"), guild_id, with_guild, invite_code)
+    pub fn guild_member_verification_optioned(
+        guild_id: u64,
+        with_guild: bool,
+        invite_code: &str,
+    ) -> String {
+        format!(
+            api!("/guilds/{}/member-verification?with_guild={}&invite_code={}"),
+            guild_id, with_guild, invite_code
+        )
     }
 
     pub fn guild_nickname(guild_id: u64) -> String {
@@ -1474,7 +1481,7 @@ pub enum RouteInfo<'a> {
     GetGuildVerificationForm {
         guild_id: u64,
         with_guild: bool,
-        code: &'a str
+        code: &'a str,
     },
     GetGuildWelcomeScreen {
         guild_id: u64,
@@ -1563,7 +1570,7 @@ pub enum RouteInfo<'a> {
         webhook_id: u64,
     },
     JoinInvite {
-        code: &'a str
+        code: &'a str,
     },
     KickMember {
         guild_id: u64,
@@ -1585,7 +1592,7 @@ pub enum RouteInfo<'a> {
         user_id: u64,
     },
     RemoveUserMeRelationship {
-        user_id: u64
+        user_id: u64,
     },
     RemoveMemberRole {
         guild_id: u64,
@@ -1609,6 +1616,7 @@ pub enum RouteInfo<'a> {
     },
     EditUserMeRelationship {
         user_id: u64,
+        add: bool,
     },
     StartGuildPrune {
         days: u64,
@@ -2192,11 +2200,15 @@ impl<'a> RouteInfo<'a> {
             ),
             RouteInfo::EditUserMeRelationship {
                 user_id,
-            } => (
-                LightMethod::Put,
-                Route::UsersMeIdRelationships,
-                Cow::from(Route::user_me_relationships_id(user_id)),
-            ),
+                add,
+            } => {
+                let method = if add { LightMethod::Put } else { LightMethod::Delete };
+                (
+                    method,
+                    Route::UsersMeIdRelationships,
+                    Cow::from(Route::user_me_relationships_id(user_id)),
+                )
+            },
             RouteInfo::EditVoiceState {
                 guild_id,
                 user_id,
@@ -2506,7 +2518,7 @@ impl<'a> RouteInfo<'a> {
             RouteInfo::GetGuildVerificationForm {
                 guild_id,
                 with_guild,
-                code
+                code,
             } => (
                 LightMethod::Get,
                 Route::GuildsIdWelcomeScreen(guild_id),
@@ -2701,11 +2713,7 @@ impl<'a> RouteInfo<'a> {
 
             RouteInfo::JoinInvite {
                 code,
-            } => (
-                LightMethod::Post,
-                Route::InvitesCode,
-                Cow::from(Route::invite(code)),
-            ),
+            } => (LightMethod::Post, Route::InvitesCode, Cow::from(Route::invite(code))),
             RouteInfo::KickMember {
                 guild_id,
                 user_id,
@@ -2746,7 +2754,7 @@ impl<'a> RouteInfo<'a> {
                 Cow::from(Route::guild_ban(guild_id, user_id)),
             ),
             RouteInfo::RemoveUserMeRelationship {
-                user_id
+                user_id,
             } => (
                 LightMethod::Delete,
                 Route::UsersMeIdRelationships,
@@ -2804,9 +2812,11 @@ impl<'a> RouteInfo<'a> {
                 (LightMethod::Get, Route::None, Cow::from(Route::status_maintenances_upcoming()))
             },
             RouteInfo::SubmitVerificationForm {
-                guild_id
+                guild_id,
             } => (
-                LightMethod::Put, Route::GuildsIdRequestsMe(guild_id), Cow::from(Route::guild_requests_me(guild_id))
+                LightMethod::Put,
+                Route::GuildsIdRequestsMe(guild_id),
+                Cow::from(Route::guild_requests_me(guild_id)),
             ),
             RouteInfo::UnpinMessage {
                 channel_id,

@@ -1,12 +1,12 @@
 //! Selfbot specific api parts
-//! 
 use std::ops::Deref;
 
-use crate::model::deserialize_u16;
 use super::{
     id::{ChannelId, GuildId, MessageId, UserId},
-    prelude::OnlineStatus, user::UserPublicFlags,
+    prelude::OnlineStatus,
+    user::UserPublicFlags,
 };
+use crate::model::{deserialize_u16};
 
 /// Summary of messages since last login.
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -25,7 +25,9 @@ pub struct ReadState {
 }
 
 /// The type of a relationship between two users.
-#[derive(Clone, Debug, PartialEq, Deserialize, Serialize)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[non_exhaustive]
+#[repr(u8)]
 pub enum RelationshipType {
     /// When a friend request was ignored.
     Ignored = 0,
@@ -37,19 +39,33 @@ pub enum RelationshipType {
     IncomingRequest = 3,
     /// When an outgoing friend request was sent.
     OutgoingRequest = 4,
+    /// Unknown handling.
+    Unknown = !0
 }
+
+enum_number!(RelationshipType {
+    Ignored,
+    Friends,
+    Blocked,
+    IncomingRequest,
+    OutgoingRequest,
+
+});
+
 impl Default for RelationshipType {
     fn default() -> Self {
         Self::Ignored
     }
 }
 
+
+
 /// Information about a relationship that a user has with another user.
 #[derive(Default, Clone, Debug, Deserialize, Serialize)]
 #[serde(default)]
 pub struct Relationship {
     /// Id of the first relationship participant.
-    #[serde(skip_serializing)]
+    // #[serde(deserialize_with = "deserialize_user_id")]
     pub id: UserId,
     /// Nickname of the user. Users only.
     pub nickname: Option<String>,
@@ -57,12 +73,13 @@ pub struct Relationship {
     #[serde(rename = "type")]
     pub kind: RelationshipType,
     /// User associated with the relationship.
-    pub user: RequestUser
+    pub user: RequestUser,
 }
 
 #[derive(Default, Clone, Debug, Deserialize, Serialize)]
 #[serde(default)]
 pub struct RequestUser {
+    // #[serde(deserialize_with = "deserialize_user_id")]
     pub id: UserId,
     #[serde(rename = "username")]
     pub name: String,
@@ -70,7 +87,7 @@ pub struct RequestUser {
     pub discriminator: u16,
     pub avatar: Option<String>,
     #[serde(rename = "public_flags")]
-    pub flags: Option<UserPublicFlags>
+    pub flags: Option<UserPublicFlags>,
 }
 
 /// RequestUser implements a Deref to UserId so it gains the convenience methods
@@ -156,4 +173,39 @@ pub struct FriendSourceFlags {
     pub all: bool,
     pub mutual_friends: bool,
     pub mutual_guilds: bool,
+}
+
+#[cfg(test)]
+mod test {
+    use serde_json::{to_string, to_value, from_str};
+
+    use crate::{
+        cache::{Cache, CacheUpdate, Settings},
+        model::prelude::*,
+    };
+
+    #[tokio::test]
+    // #[allow(clippy::unwrap_used)]
+    pub async fn test() {
+        let test_relationship = Relationship {
+            id: UserId(1000000000000),
+            nickname: None,
+            kind: RelationshipType::Friends,
+            user: RequestUser {
+                id: UserId(999999999999),
+                name: "friended_user".to_string(),
+                discriminator: 9999,
+                avatar: None,
+                flags: Some(UserPublicFlags {
+                    bits: 0,
+                }),
+            },
+        };
+
+        let test_str = r#"{"id":1000000000000,"nickname":null,"type":1,"user":{"id":999999999999,"username":"friended_user","discriminator":9999,"avatar":null,"public_flags":0}}"#;
+
+        println!("{}", to_string(&test_relationship).unwrap());
+
+        println!("{:?}", from_str::<Relationship>(&test_str).unwrap());
+    }
 }

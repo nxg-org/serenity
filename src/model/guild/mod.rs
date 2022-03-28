@@ -2853,13 +2853,26 @@ pub struct GuildVerificationFormSubmission {
 }
 
 impl From<GuildVerificationForm> for GuildVerificationFormSubmission {
-    fn from(a: GuildVerificationForm) -> Self {
+    fn from(form: GuildVerificationForm) -> Self {
         Self {
-            form_fields: a.form_fields,
-            version: a.version
+            form_fields: form.form_fields,
+            version: form.version
         }
     }
 }
+
+
+impl From<&GuildVerificationForm> for GuildVerificationFormSubmission {
+    fn from(form: &GuildVerificationForm) -> Self {
+        Self {
+            form_fields: form.form_fields.clone(),
+            version: (*form).version
+        }
+    }
+}
+
+
+
 
 /// Information relating to a guild's welcome screen.
 #[derive(Clone, Debug, Deserialize, Serialize)]

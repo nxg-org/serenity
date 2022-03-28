@@ -327,11 +327,17 @@ pub struct Http {
 
 impl PartialEq for Http {
     fn ne(&self, other: &Self) -> bool {
-        self.ratelimiter_disabled != other.ratelimiter_disabled || self.proxy != other.proxy || self.token != other.token || self.user_ctx != other.user_ctx
+        self.ratelimiter_disabled != other.ratelimiter_disabled
+            || self.proxy != other.proxy
+            || self.token != other.token
+            || self.user_ctx != other.user_ctx
     }
 
     fn eq(&self, other: &Self) -> bool {
-        self.ratelimiter_disabled == other.ratelimiter_disabled && self.proxy == other.proxy && self.token == other.token && self.user_ctx == other.user_ctx 
+        self.ratelimiter_disabled == other.ratelimiter_disabled
+            && self.proxy == other.proxy
+            && self.token == other.token
+            && self.user_ctx == other.user_ctx
     }
 }
 
@@ -855,8 +861,8 @@ impl Http {
         static HEADERS: OnceCell<Headers<HeaderValue>> = OnceCell::new();
         self.fire(Request {
             body: Some(&body),
-            //if &self.token[..3] == "Bot" {
-            headers:  Some(
+            // if &self.token[..3] == "Bot" {
+            headers: Some(
                 HEADERS
                     .get_or_init(|| {
                         let mut headers = Headers::with_capacity(1);
@@ -3076,7 +3082,7 @@ impl Http {
     pub async fn get_relationship(&self, user_id: u64) -> Result<Relationship> {
         match self.get_all_relationships().await?.into_iter().find(|rel| rel.id.0 == user_id) {
             Some(rel) => Ok(rel),
-            None => panic!("Did not find user."),
+            None => return Err(Error::Other("Could not find relationship.")),
         }
     }
 
@@ -3097,7 +3103,7 @@ impl Http {
         self.fire(Request {
             body: None,
             headers: None,
-            route: RouteInfo::GetUserMeRelationship
+            route: RouteInfo::GetUserMeRelationship,
         })
         .await
     }
@@ -3461,30 +3467,6 @@ impl Http {
         .await
     }
 
-    #[inline]
-    pub async fn remove_friend_request(&self, user_id: u64) -> Result<()> {
-        static HEADERS: OnceCell<Headers<HeaderValue>> = OnceCell::new();
-        self.wind(204, Request {
-            body: None,
-            headers: Some(
-                HEADERS
-                    .get_or_init(|| {
-                        let mut headers = Headers::with_capacity(1);
-                        headers.insert(
-                            "x-context-properties",
-                            HeaderValue::from_static("eyJsb2NhdGlvbiI6IlVzZXIgUHJvZmlsZSJ9"),
-                        );
-                        headers
-                    })
-                    .clone(),
-            ),
-            route: RouteInfo::RemoveUserMeRelationship {
-                user_id,
-            },
-        })
-        .await
-    }
-
     /// Deletes a single [`Role`] from a [`Member`] in a [`Guild`].
     ///
     /// **Note**: Requires the [Manage Roles] permission and respect of role
@@ -3557,32 +3539,6 @@ impl Http {
         serde_json::from_value(value).map_err(From::from)
     }
 
-    /// Sends a friend request to the specified [`User`]
-    #[inline]
-    pub async fn send_friend_request(&self, user_id: u64) -> Result<()> {
-        static HEADERS: OnceCell<Headers<HeaderValue>> = OnceCell::new();
-
-        self.wind(204, Request {
-            body: Some(b"{}"),
-            headers: Some(
-                HEADERS
-                    .get_or_init(|| {
-                        let mut headers = Headers::with_capacity(1);
-                        headers.insert(
-                            "x-context-properties",
-                            HeaderValue::from_static("eyJsb2NhdGlvbiI6IlVzZXIgUHJvZmlsZSJ9"),
-                        );
-                        headers
-                    })
-                    .clone(),
-            ),
-            route: RouteInfo::EditUserMeRelationship {
-                user_id,
-            },
-        })
-        .await
-    }
-
     /// Attempts to set relationship status as provided by kind
     ///
     /// # Errors
@@ -3590,16 +3546,64 @@ impl Http {
     /// - whenever invalid input is provided, as you can't set your
     ///   status to IncomingRequest
     /// - whenever used by a bot account
+    ///
+    /// # Issues
+    /// - Old code is outdated. Replacing with a switch statement.
     #[inline]
     pub async fn edit_relationship(&self, user_id: u64, kind: RelationshipType) -> Result<()> {
-        let mut map = Map::new();
-        map.insert("type".to_string(), Value::Number(Number::from(kind as u64)));
-        self.wind(204, Request {
-            body: Some(&serde_json::to_vec(&map)?),
-            headers: None,
-            route: RouteInfo::EditUserRelationship {
-                user_id,
+        // let mut map = Map::new();
+        // map.insert("type".to_string(), Value::Number(Number::from(kind as u64)));
+        // self.wind(204, Request {
+        //     body: Some(&serde_json::to_vec(&map)?),
+        //     headers: None,
+        // route: RouteInfo::EditUserRelationship {
+        //     user_id,
+        // },
+        // })
+        // .await
+
+        let mut body: Option<&[u8]> = None;
+        let mut add = false;
+
+        match kind {
+            RelationshipType::Friends | RelationshipType::OutgoingRequest => {
+                add = true;
+                body = Some(&"{}".as_bytes());
             },
+            RelationshipType::Ignored => {},
+            RelationshipType::Blocked => {
+                body = Some(&{ "type:2" }.as_bytes());
+            },
+            RelationshipType::IncomingRequest => {
+                return Err(Error::Other("Cannot set relationship type to \"Incoming Request\"."))
+            },
+
+            RelationshipType::Unknown => {
+                return Err(Error::Other("Invalid relationship type passed."))
+            },
+        }
+
+        let route = RouteInfo::EditUserMeRelationship {
+            user_id,
+            add,
+        };
+
+        static HEADERS: OnceCell<Headers<HeaderValue>> = OnceCell::new();
+        self.wind(204, Request {
+            body,
+            headers: Some(
+                HEADERS
+                    .get_or_init(|| {
+                        let mut headers = Headers::with_capacity(1);
+                        headers.insert(
+                            "x-context-properties",
+                            HeaderValue::from_static("eyJsb2NhdGlvbiI6IkNvbnRleHRNZW51In0="),
+                        );
+                        headers
+                    })
+                    .clone(),
+            ),
+            route,
         })
         .await
     }
@@ -3834,7 +3838,6 @@ impl Http {
 
         let response = if self.ratelimiter_disabled {
             let request = req.build(&self.client, &self.token, self.proxy.as_ref())?.build()?;
-            println!("{:?}", &request);
             self.client.execute(request).await?
         } else {
             let ratelimiting_req = RatelimitedRequest::from(req);

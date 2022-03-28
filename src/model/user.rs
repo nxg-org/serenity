@@ -928,7 +928,7 @@ impl User {
     /// Returns [`Error::Http`] when using a bot user
     #[inline]
     pub async fn friend(&mut self, cache_http: impl CacheHttp) -> Result<()> {
-        cache_http.http().send_friend_request(self.id.0).await
+        cache_http.http().edit_relationship(self.id.0, RelationshipType::Friends).await
     }
 
     /// Blocks the user.

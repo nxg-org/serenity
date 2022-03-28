@@ -1053,6 +1053,7 @@ mod test {
     use std::collections::HashMap;
 
     use chrono::{DateTime, Utc};
+    use serde_json;
     use serde_json::{Number, Value};
 
     use crate::{
@@ -1116,6 +1117,12 @@ mod test {
                 components: vec![],
             },
         };
+
+        let test_str = r#"{"id":3,"attachments":[],"author":{"id":2,"bio":null,"avatar":null,"bot":false,"discriminator":1,"username":"user 1","public_flags":null,"banner":null,"accent_color":null},"channel_id":2,"content":"","edited_timestamp":null,"embeds":[],"guild_id":1,"type":0,"member":null,"mention_everyone":false,"mention_roles":[],"mention_channels":[],"mentions":[],"nonce":1,"pinned":false,"reactions":[],"timestamp":"1983-04-13T12:09:14.274Z","tts":false,"webhook_id":null,"activity":null,"application":null,"message_reference":null,"flags":null,"stickers":[],"referenced_message":null,"interaction":null,"components":[]}"#;
+
+        println!("{}", serde_json::to_string(&event).unwrap());
+
+        println!("{:?}", serde_json::from_str::<MessageCreateEvent>(&test_str).unwrap());
 
         // Check that the channel cache doesn't exist.
         assert!(!cache.messages.read().await.contains_key(&event.message.channel_id));

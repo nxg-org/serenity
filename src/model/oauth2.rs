@@ -49,7 +49,7 @@ pub enum OAuth2Scope {
     /// allows your app to update a user's activity - requires Discord approval (Not required for gamesdk activity manager!).
     ActivitiesWrite,
     /// Allows your app to know a user's friends and implicit relationships - requires Discord approval.
-    RelactionshipsRead,
+    RelationshipsRead,
 }
 
 impl fmt::Display for OAuth2Scope {
@@ -77,7 +77,7 @@ impl fmt::Display for OAuth2Scope {
             Self::ApplicationsEntitlements => "applications.entitlements",
             Self::ActivitiesRead => "activities.read",
             Self::ActivitiesWrite => "activities.write",
-            Self::RelactionshipsRead => "relationships.read",
+            Self::RelationshipsRead => "relationships.read",
         };
 
         f.write_str(val)
