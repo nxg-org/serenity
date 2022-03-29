@@ -1385,6 +1385,15 @@ impl GuildId {
         http.as_ref().get_guild_application_command_permissions(self.0, command_id.into()).await
     }
 
+    /// Get the guild verification form.
+    ///
+    /// # Errors
+    ///
+    /// Returns [`Error::Http`] if the guild does not have a verification form.
+    pub async fn get_verification_form(&self, http: impl AsRef<Http>, code: &str) -> Result<GuildVerificationForm> {
+        http.as_ref().get_guild_verification_form(self.0, false, code).await
+    }
+
     /// Get the guild welcome screen.
     ///
     /// # Errors

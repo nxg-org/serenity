@@ -194,8 +194,8 @@ impl Invite {
                 let guild_id = self.guild.as_ref().map(|g| g.id);
                 let channel_id = self.channel.id;
 
-                if guild_id.is_some() {
-                    if cache.guilds.read().await.contains_key(&guild_id.unwrap()) {
+                if let Some(guild_id) = guild_id {
+                    if cache.guilds.read().await.contains_key(&guild_id) {
                         return Ok(self.to_owned())
                     }
                 } else {

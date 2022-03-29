@@ -204,8 +204,7 @@ mod test {
 
         let test_str = r#"{"id":1000000000000,"nickname":null,"type":1,"user":{"id":999999999999,"username":"friended_user","discriminator":9999,"avatar":null,"public_flags":0}}"#;
 
-        println!("{}", to_string(&test_relationship).unwrap());
+        assert_eq!(test_str, to_string(&test_relationship).unwrap());
 
-        println!("{:?}", from_str::<Relationship>(&test_str).unwrap());
     }
 }

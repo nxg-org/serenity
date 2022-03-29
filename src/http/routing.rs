@@ -384,6 +384,8 @@ pub enum Route {
     UsersMeGuildsId,
     /// Route for the `/users/@me/notes/:note_id` path.
     UsersMeNotes,
+    /// Route for the `/users/@me/settings` path.
+    UsersMeSettings,
     /// Route for the `/voice/regions` path.
     VoiceRegions,
     /// Route for the `/webhooks/:webhook_id` path.
@@ -922,6 +924,10 @@ impl Route {
 
     pub fn user_me_note(user_id: u64) -> String {
         format!(api!("/users/@me/notes/{}"), user_id)
+    }
+
+    pub fn user_me_settings() -> &'static str {
+        api!("/users/@me/settings")
     }
 
     pub fn user_guild<D: Display>(target: D, guild_id: u64) -> String {
@@ -1618,6 +1624,7 @@ pub enum RouteInfo<'a> {
         user_id: u64,
         add: bool,
     },
+    EditUserMeSetting,
     StartGuildPrune {
         days: u64,
         guild_id: u64,
@@ -2191,6 +2198,9 @@ impl<'a> RouteInfo<'a> {
             RouteInfo::EditUserNote {
                 user_id,
             } => (LightMethod::Put, Route::UsersMeNotes, Cow::from(Route::user_me_note(user_id))),
+            RouteInfo::EditUserMeSetting => {
+                (LightMethod::Patch, Route::UsersMeSettings, Cow::from(Route::user_me_settings()))
+            },
             RouteInfo::EditUserRelationship {
                 user_id,
             } => (

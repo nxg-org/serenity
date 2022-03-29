@@ -131,6 +131,16 @@ impl CacheHttp for (&Arc<Cache>, &Http) {
     }
 }
 
+#[cfg(feature = "cache")]
+impl CacheHttp for (Arc<Cache>, Arc<Http>) {
+    fn cache(&self) -> Option<&Arc<Cache>> {
+        Some(&self.0)
+    }
+    fn http(&self) -> &Http {
+        &self.1
+    }
+}
+
 impl CacheHttp for Http {
     fn http(&self) -> &Http {
         self
@@ -154,6 +164,20 @@ impl AsRef<Cache> for (&Arc<Cache>, &Http) {
 impl AsRef<Http> for (&Arc<Cache>, &Http) {
     fn as_ref(&self) -> &Http {
         self.1
+    }
+}
+
+#[cfg(feature = "cache")]
+impl AsRef<Cache> for (Arc<Cache>, Arc<Http>) {
+    fn as_ref(&self) -> &Cache {
+        &self.0
+    }
+}
+
+#[cfg(feature = "cache")]
+impl AsRef<Http> for (Arc<Cache>, Arc<Http>) {
+    fn as_ref(&self) -> &Http {
+        &self.1
     }
 }
 

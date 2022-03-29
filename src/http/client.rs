@@ -3623,6 +3623,17 @@ impl Http {
         .await
     }
 
+    /// Sets a setting for the current [`User`].
+    #[inline]
+    pub async fn edit_user_me_setting(&self, map: &Value) -> Result<()> {
+        self.wind(200, Request {
+            body: Some(&serde_json::to_vec(&map)?),
+            headers: None,
+            route: RouteInfo::EditUserMeSetting
+        })
+        .await
+    }
+
     /// Starts removing some members from a guild based on the last time they've been online.
     pub async fn start_guild_prune(&self, guild_id: u64, map: &Value) -> Result<GuildPrune> {
         // Note for 0.6.x: turn this into a function parameter.
