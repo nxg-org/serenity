@@ -2776,6 +2776,74 @@
 <span id="2771">2771</span>
 <span id="2772">2772</span>
 <span id="2773">2773</span>
+<span id="2774">2774</span>
+<span id="2775">2775</span>
+<span id="2776">2776</span>
+<span id="2777">2777</span>
+<span id="2778">2778</span>
+<span id="2779">2779</span>
+<span id="2780">2780</span>
+<span id="2781">2781</span>
+<span id="2782">2782</span>
+<span id="2783">2783</span>
+<span id="2784">2784</span>
+<span id="2785">2785</span>
+<span id="2786">2786</span>
+<span id="2787">2787</span>
+<span id="2788">2788</span>
+<span id="2789">2789</span>
+<span id="2790">2790</span>
+<span id="2791">2791</span>
+<span id="2792">2792</span>
+<span id="2793">2793</span>
+<span id="2794">2794</span>
+<span id="2795">2795</span>
+<span id="2796">2796</span>
+<span id="2797">2797</span>
+<span id="2798">2798</span>
+<span id="2799">2799</span>
+<span id="2800">2800</span>
+<span id="2801">2801</span>
+<span id="2802">2802</span>
+<span id="2803">2803</span>
+<span id="2804">2804</span>
+<span id="2805">2805</span>
+<span id="2806">2806</span>
+<span id="2807">2807</span>
+<span id="2808">2808</span>
+<span id="2809">2809</span>
+<span id="2810">2810</span>
+<span id="2811">2811</span>
+<span id="2812">2812</span>
+<span id="2813">2813</span>
+<span id="2814">2814</span>
+<span id="2815">2815</span>
+<span id="2816">2816</span>
+<span id="2817">2817</span>
+<span id="2818">2818</span>
+<span id="2819">2819</span>
+<span id="2820">2820</span>
+<span id="2821">2821</span>
+<span id="2822">2822</span>
+<span id="2823">2823</span>
+<span id="2824">2824</span>
+<span id="2825">2825</span>
+<span id="2826">2826</span>
+<span id="2827">2827</span>
+<span id="2828">2828</span>
+<span id="2829">2829</span>
+<span id="2830">2830</span>
+<span id="2831">2831</span>
+<span id="2832">2832</span>
+<span id="2833">2833</span>
+<span id="2834">2834</span>
+<span id="2835">2835</span>
+<span id="2836">2836</span>
+<span id="2837">2837</span>
+<span id="2838">2838</span>
+<span id="2839">2839</span>
+<span id="2840">2840</span>
+<span id="2841">2841</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">borrow::Cow</span>,
     <span class="ident">fmt</span>::{<span class="ident">Display</span>, <span class="ident">Write</span>},
@@ -3069,9 +3137,9 @@
     <span class="doccomment">/// [`GuildId`]: crate::model::id::GuildId</span>
     <span class="ident">GuildsIdMembersSearch</span>(<span class="ident">u64</span>),
     <span class="doccomment">/// Route for the &#39;/guilds/:guild_id/member-verification` path.</span>
-    <span class="doccomment">/// </span>
+    <span class="doccomment">///</span>
     <span class="doccomment">/// The data is the relevant [`GuildId`].</span>
-    <span class="doccomment">/// </span>
+    <span class="doccomment">///</span>
     <span class="doccomment">/// [`GuildId`]: crate::model::id::GuildId</span>
     <span class="ident">GuildsIdMemberVerificationForm</span>(<span class="ident">u64</span>),
     <span class="doccomment">/// Route for the `/guilds/:guild_id/prune` path.</span>
@@ -3146,6 +3214,10 @@
     <span class="ident">UsersId</span>,
     <span class="doccomment">/// Route for the `/users/:user_id/relationships` path</span>
     <span class="ident">UsersIdRelationships</span>,
+    <span class="doccomment">/// Route for the `/users/@me/relationships` path</span>
+    <span class="ident">UsersMeRelationships</span>,
+    <span class="doccomment">/// Route for the `/users/@me/relationships/:user_id` path</span>
+    <span class="ident">UsersMeIdRelationships</span>,
     <span class="doccomment">/// Route for the `/users/@me` path.</span>
     <span class="ident">UsersMe</span>,
     <span class="doccomment">/// Route for the `/users/@me/channels` path.</span>
@@ -3158,6 +3230,8 @@
     <span class="ident">UsersMeGuildsId</span>,
     <span class="doccomment">/// Route for the `/users/@me/notes/:note_id` path.</span>
     <span class="ident">UsersMeNotes</span>,
+    <span class="doccomment">/// Route for the `/users/@me/settings` path.</span>
+    <span class="ident">UsersMeSettings</span>,
     <span class="doccomment">/// Route for the `/voice/regions` path.</span>
     <span class="ident">VoiceRegions</span>,
     <span class="doccomment">/// Route for the `/webhooks/:webhook_id` path.</span>
@@ -3579,8 +3653,15 @@
         <span class="macro">format!</span>(<span class="macro">api!</span>(<span class="string">&quot;/guilds/{}/member-verification&quot;</span>), <span class="ident">guild_id</span>)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">guild_member_verification_optioned</span>(<span class="ident">guild_id</span>: <span class="ident">u64</span>, <span class="ident">with_guild</span>: <span class="ident">bool</span>, <span class="ident">invite_code</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">String</span> {
-        <span class="macro">format!</span>(<span class="macro">api!</span>(<span class="string">&quot;/guilds/{}/member-verification?with_guild={}&amp;invite_code={}&quot;</span>), <span class="ident">guild_id</span>, <span class="ident">with_guild</span>, <span class="ident">invite_code</span>)
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">guild_member_verification_optioned</span>(
+        <span class="ident">guild_id</span>: <span class="ident">u64</span>,
+        <span class="ident">with_guild</span>: <span class="ident">bool</span>,
+        <span class="ident">invite_code</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+    ) -&gt; <span class="ident">String</span> {
+        <span class="macro">format!</span>(
+            <span class="macro">api!</span>(<span class="string">&quot;/guilds/{}/member-verification?with_guild={}&amp;invite_code={}&quot;</span>),
+            <span class="ident">guild_id</span>, <span class="ident">with_guild</span>, <span class="ident">invite_code</span>
+        )
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">guild_nickname</span>(<span class="ident">guild_id</span>: <span class="ident">u64</span>) -&gt; <span class="ident">String</span> {
@@ -3671,6 +3752,14 @@
         <span class="macro">format!</span>(<span class="macro">api!</span>(<span class="string">&quot;/users/{}/relationships&quot;</span>), <span class="ident">user_id</span>)
     }
 
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">user_relationships_me</span>() -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> {
+        <span class="macro">api!</span>(<span class="string">&quot;/users/@me/relationships&quot;</span>)
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">user_me_relationships_id</span>(<span class="ident">user_id</span>: <span class="ident">u64</span>) -&gt; <span class="ident">String</span> {
+        <span class="macro">format!</span>(<span class="macro">api!</span>(<span class="string">&quot;/users/@me/relationships/{}&quot;</span>), <span class="ident">user_id</span>)
+    }
+
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">user_me_connections</span>() -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> {
         <span class="macro">api!</span>(<span class="string">&quot;/users/@me/connections&quot;</span>)
     }
@@ -3681,6 +3770,10 @@
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">user_me_note</span>(<span class="ident">user_id</span>: <span class="ident">u64</span>) -&gt; <span class="ident">String</span> {
         <span class="macro">format!</span>(<span class="macro">api!</span>(<span class="string">&quot;/users/@me/notes/{}&quot;</span>), <span class="ident">user_id</span>)
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">user_me_settings</span>() -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> {
+        <span class="macro">api!</span>(<span class="string">&quot;/users/@me/settings&quot;</span>)
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">user_guild</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">Display</span><span class="op">&gt;</span>(<span class="ident">target</span>: <span class="ident">D</span>, <span class="ident">guild_id</span>: <span class="ident">u64</span>) -&gt; <span class="ident">String</span> {
@@ -4240,7 +4333,7 @@
     <span class="ident">GetGuildVerificationForm</span> {
         <span class="ident">guild_id</span>: <span class="ident">u64</span>,
         <span class="ident">with_guild</span>: <span class="ident">bool</span>,
-        <span class="ident">code</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>
+        <span class="ident">code</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>,
     },
     <span class="ident">GetGuildWelcomeScreen</span> {
         <span class="ident">guild_id</span>: <span class="ident">u64</span>,
@@ -4316,6 +4409,10 @@
     <span class="ident">GetUserRelationship</span> {
         <span class="ident">user_id</span>: <span class="ident">u64</span>,
     },
+    <span class="ident">GetUserMeRelationship</span>,
+    <span class="ident">GetUserMeRelationshipId</span> {
+        <span class="ident">user_id</span>: <span class="ident">u64</span>,
+    },
     <span class="ident">GetVoiceRegions</span>,
     <span class="ident">GetWebhook</span> {
         <span class="ident">webhook_id</span>: <span class="ident">u64</span>,
@@ -4325,7 +4422,7 @@
         <span class="ident">webhook_id</span>: <span class="ident">u64</span>,
     },
     <span class="ident">JoinInvite</span> {
-        <span class="ident">code</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>
+        <span class="ident">code</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>,
     },
     <span class="ident">KickMember</span> {
         <span class="ident">guild_id</span>: <span class="ident">u64</span>,
@@ -4344,6 +4441,9 @@
     },
     <span class="ident">RemoveBan</span> {
         <span class="ident">guild_id</span>: <span class="ident">u64</span>,
+        <span class="ident">user_id</span>: <span class="ident">u64</span>,
+    },
+    <span class="ident">RemoveUserMeRelationship</span> {
         <span class="ident">user_id</span>: <span class="ident">u64</span>,
     },
     <span class="ident">RemoveMemberRole</span> {
@@ -4366,6 +4466,11 @@
     <span class="ident">EditUserRelationship</span> {
         <span class="ident">user_id</span>: <span class="ident">u64</span>,
     },
+    <span class="ident">EditUserMeRelationship</span> {
+        <span class="ident">user_id</span>: <span class="ident">u64</span>,
+        <span class="ident">add</span>: <span class="ident">bool</span>,
+    },
+    <span class="ident">EditUserMeSetting</span>,
     <span class="ident">StartGuildPrune</span> {
         <span class="ident">days</span>: <span class="ident">u64</span>,
         <span class="ident">guild_id</span>: <span class="ident">u64</span>,
@@ -4939,6 +5044,9 @@
             <span class="ident">RouteInfo::EditUserNote</span> {
                 <span class="ident">user_id</span>,
             } =&gt; (<span class="ident">LightMethod::Put</span>, <span class="ident">Route::UsersMeNotes</span>, <span class="ident">Cow::from</span>(<span class="ident">Route::user_me_note</span>(<span class="ident">user_id</span>))),
+            <span class="ident">RouteInfo::EditUserMeSetting</span> =&gt; {
+                (<span class="ident">LightMethod::Patch</span>, <span class="ident">Route::UsersMeSettings</span>, <span class="ident">Cow::from</span>(<span class="ident">Route::user_me_settings</span>()))
+            },
             <span class="ident">RouteInfo::EditUserRelationship</span> {
                 <span class="ident">user_id</span>,
             } =&gt; (
@@ -4946,6 +5054,17 @@
                 <span class="ident">Route::UsersIdRelationships</span>,
                 <span class="ident">Cow::from</span>(<span class="ident">Route::user_relationships</span>(<span class="ident">user_id</span>)),
             ),
+            <span class="ident">RouteInfo::EditUserMeRelationship</span> {
+                <span class="ident">user_id</span>,
+                <span class="ident">add</span>,
+            } =&gt; {
+                <span class="kw">let</span> <span class="ident">method</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">add</span> { <span class="ident">LightMethod::Put</span> } <span class="kw">else</span> { <span class="ident">LightMethod::Delete</span> };
+                (
+                    <span class="ident">method</span>,
+                    <span class="ident">Route::UsersMeIdRelationships</span>,
+                    <span class="ident">Cow::from</span>(<span class="ident">Route::user_me_relationships_id</span>(<span class="ident">user_id</span>)),
+                )
+            },
             <span class="ident">RouteInfo::EditVoiceState</span> {
                 <span class="ident">guild_id</span>,
                 <span class="ident">user_id</span>,
@@ -5255,7 +5374,7 @@
             <span class="ident">RouteInfo::GetGuildVerificationForm</span> {
                 <span class="ident">guild_id</span>,
                 <span class="ident">with_guild</span>,
-                <span class="ident">code</span>
+                <span class="ident">code</span>,
             } =&gt; (
                 <span class="ident">LightMethod::Get</span>,
                 <span class="ident">Route::GuildsIdWelcomeScreen</span>(<span class="ident">guild_id</span>),
@@ -5417,6 +5536,18 @@
                 <span class="ident">Route::UsersIdRelationships</span>,
                 <span class="ident">Cow::from</span>(<span class="ident">Route::user_relationships</span>(<span class="ident">user_id</span>)),
             ),
+            <span class="ident">RouteInfo::GetUserMeRelationship</span> =&gt; (
+                <span class="ident">LightMethod::Get</span>,
+                <span class="ident">Route::UsersMeRelationships</span>,
+                <span class="ident">Cow::from</span>(<span class="ident">Route::user_relationships_me</span>()),
+            ),
+            <span class="ident">RouteInfo::GetUserMeRelationshipId</span> {
+                <span class="ident">user_id</span>,
+            } =&gt; (
+                <span class="ident">LightMethod::Get</span>,
+                <span class="ident">Route::UsersMeIdRelationships</span>,
+                <span class="ident">Cow::from</span>(<span class="ident">Route::user_me_relationships_id</span>(<span class="ident">user_id</span>)),
+            ),
             <span class="ident">RouteInfo::GetVoiceRegions</span> =&gt; {
                 (<span class="ident">LightMethod::Get</span>, <span class="ident">Route::VoiceRegions</span>, <span class="ident">Cow::from</span>(<span class="ident">Route::voice_regions</span>()))
             },
@@ -5438,11 +5569,7 @@
 
             <span class="ident">RouteInfo::JoinInvite</span> {
                 <span class="ident">code</span>,
-            } =&gt; (
-                <span class="ident">LightMethod::Post</span>,
-                <span class="ident">Route::InvitesCode</span>,
-                <span class="ident">Cow::from</span>(<span class="ident">Route::invite</span>(<span class="ident">code</span>)),
-            ),
+            } =&gt; (<span class="ident">LightMethod::Post</span>, <span class="ident">Route::InvitesCode</span>, <span class="ident">Cow::from</span>(<span class="ident">Route::invite</span>(<span class="ident">code</span>))),
             <span class="ident">RouteInfo::KickMember</span> {
                 <span class="ident">guild_id</span>,
                 <span class="ident">user_id</span>,
@@ -5481,6 +5608,13 @@
                 <span class="ident">LightMethod::Delete</span>,
                 <span class="ident">Route::GuildsIdBansUserId</span>(<span class="ident">guild_id</span>),
                 <span class="ident">Cow::from</span>(<span class="ident">Route::guild_ban</span>(<span class="ident">guild_id</span>, <span class="ident">user_id</span>)),
+            ),
+            <span class="ident">RouteInfo::RemoveUserMeRelationship</span> {
+                <span class="ident">user_id</span>,
+            } =&gt; (
+                <span class="ident">LightMethod::Delete</span>,
+                <span class="ident">Route::UsersMeIdRelationships</span>,
+                <span class="ident">Cow::from</span>(<span class="ident">Route::user_me_relationships_id</span>(<span class="ident">user_id</span>)),
             ),
             <span class="ident">RouteInfo::RemoveMemberRole</span> {
                 <span class="ident">guild_id</span>,
@@ -5534,9 +5668,11 @@
                 (<span class="ident">LightMethod::Get</span>, <span class="ident">Route::None</span>, <span class="ident">Cow::from</span>(<span class="ident">Route::status_maintenances_upcoming</span>()))
             },
             <span class="ident">RouteInfo::SubmitVerificationForm</span> {
-                <span class="ident">guild_id</span>
+                <span class="ident">guild_id</span>,
             } =&gt; (
-                <span class="ident">LightMethod::Put</span>, <span class="ident">Route::GuildsIdRequestsMe</span>(<span class="ident">guild_id</span>), <span class="ident">Cow::from</span>(<span class="ident">Route::guild_requests_me</span>(<span class="ident">guild_id</span>))
+                <span class="ident">LightMethod::Put</span>,
+                <span class="ident">Route::GuildsIdRequestsMe</span>(<span class="ident">guild_id</span>),
+                <span class="ident">Cow::from</span>(<span class="ident">Route::guild_requests_me</span>(<span class="ident">guild_id</span>)),
             ),
             <span class="ident">RouteInfo::UnpinMessage</span> {
                 <span class="ident">channel_id</span>,
@@ -5550,5 +5686,5 @@
     }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="serenity" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.61.0-nightly (c84f39e6c 2022-03-20)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="serenity" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.61.0-nightly (ee915c34e 2022-03-28)" ></div>
 </body></html>
