@@ -144,6 +144,13 @@ impl Error {
             _ => None,
         }
     }
+
+    pub fn discord_error<'a>(&'a self) -> Option<&'a DiscordJsonError> {
+        match self {
+            Self::UnsuccessfulRequest(res) => Some(&res.error),
+            _ => None,
+        }
+    }
 }
 
 impl From<ErrorResponse> for Error {

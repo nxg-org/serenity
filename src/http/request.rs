@@ -117,7 +117,7 @@ impl<'a> Request<'a> {
 
         // Discord will return a 400: Bad Request response if we set the content type header,
         // but don't give a body.
-        if self.body.is_some() {
+        if self.body.is_some() && !headers.contains_key(CONTENT_TYPE) {
             headers.insert(CONTENT_TYPE, HeaderValue::from_static("application/json"));
         }
 

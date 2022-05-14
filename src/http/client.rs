@@ -38,9 +38,9 @@ use crate::http::generators::*;
 use crate::http::routing::Route;
 use crate::internal::prelude::*;
 #[cfg(feature = "unstable_discord_api")]
-use crate::model::interactions::application_command::{
-    ApplicationCommand,
-    ApplicationCommandPermission,
+use crate::model::interactions::{
+    user_interactions::UserApplicationCommandSearchResult,
+    application_command::{ApplicationCommand, ApplicationCommandPermission},
 };
 use crate::model::prelude::*;
 use crate::utils;
@@ -325,19 +325,32 @@ pub struct Http {
     pub application_id: u64,
 }
 
+impl Eq for Http {}
+impl Ord for Http {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        self.token.cmp(&other.token)
+    }
+}
+
 impl PartialEq for Http {
     fn ne(&self, other: &Self) -> bool {
-        self.ratelimiter_disabled != other.ratelimiter_disabled
+        self.token != other.token
+            || self.ratelimiter_disabled != other.ratelimiter_disabled
             || self.proxy != other.proxy
-            || self.token != other.token
             || self.user_ctx != other.user_ctx
     }
 
     fn eq(&self, other: &Self) -> bool {
-        self.ratelimiter_disabled == other.ratelimiter_disabled
+        self.token == other.token
+            && self.ratelimiter_disabled == other.ratelimiter_disabled
             && self.proxy == other.proxy
-            && self.token == other.token
             && self.user_ctx == other.user_ctx
+    }
+}
+
+impl PartialOrd for Http {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        self.token.partial_cmp(&other.token)
     }
 }
 
@@ -409,6 +422,16 @@ impl Http {
         }
 
         self
+    }
+
+    pub fn ratelimiter_disabled(&mut self, enabled: bool) -> &mut Self {
+        self.ratelimiter_disabled = enabled;
+
+        self
+    }
+
+    pub fn get_client(&self) -> Arc<Client> {
+        self.client.clone()
     }
 
     /// Adds a [`User`] to a [`Group`].
@@ -2350,6 +2373,32 @@ impl Http {
         .await
     }
 
+    /// Gets all archived private threads joined from a channel.
+    #[cfg(feature = "unstable_discord_api")]
+    pub async fn get_channel_application_commands<'a>(
+        &self,
+        channel_id: u64,
+        kind: u8,
+        limit: Option<u64>,
+        command_ids: Option<&'a [u64]>,
+        application_id: Option<u64>,
+        include_applications: Option<bool>,
+    ) -> Result<UserApplicationCommandSearchResult> {
+        self.fire(Request {
+            body: None,
+            headers: None,
+            route: RouteInfo::GetChannelApplicationCommands {
+                channel_id,
+                kind,
+                limit,
+                command_ids,
+                application_id,
+                include_applications,
+            },
+        })
+        .await
+    }
+
     /// Joins [`Guild`] or [`Group`] from an invite string, returns a [`Invite`]
     ///
     /// # Errors
@@ -3441,6 +3490,40 @@ impl Http {
         .await
     }
 
+    /// Sends a message to a channel.
+    /// Update: doesn't work lol
+    #[cfg(feature = "unstable_discord_api")]
+    pub async fn send_interaction_init(
+        &self,
+        channel_id: u64,
+        map: reqwest::multipart::Form,
+    ) -> Result<ReqwestResponse> {
+        let mut req = Request {
+            body: None,
+            headers: None,
+            route: RouteInfo::CreateInteractionInit {
+                channel_id,
+            },
+        };
+
+        if let Some(user_ctx) = &self.user_ctx {
+            req.headers = Some(user_ctx.headers.clone());
+        };
+
+        let request = req.build(&self.client, &self.token, self.proxy.as_ref())?;
+        let request = request.multipart(map);
+        let request = request.build()?;
+
+        println!("{:?}", request.headers());
+        let response = self.client.execute(request).await?;
+
+        if response.status().is_success() {
+            Ok(response)
+        } else {
+            Err(Error::Http(Box::new(HttpError::from_response(response).await)))
+        }
+    }
+
     /// Pins a message in a channel.
     pub async fn pin_message(&self, channel_id: u64, message_id: u64) -> Result<()> {
         self.wind(204, Request {
@@ -3597,7 +3680,7 @@ impl Http {
                         let mut headers = Headers::with_capacity(1);
                         headers.insert(
                             "x-context-properties",
-                            HeaderValue::from_static("eyJsb2NhdGlvbiI6IkNvbnRleHRNZW51In0="),
+                            HeaderValue::from_static("eyJsb2NhdGlvbiI6IkZyaWVuZHMifQ=="),
                         );
                         headers
                     })
@@ -3619,17 +3702,6 @@ impl Http {
             route: RouteInfo::EditUserNote {
                 user_id,
             },
-        })
-        .await
-    }
-
-    /// Sets a setting for the current [`User`].
-    #[inline]
-    pub async fn edit_user_me_setting(&self, map: &Value) -> Result<()> {
-        self.wind(200, Request {
-            body: Some(&serde_json::to_vec(&map)?),
-            headers: None,
-            route: RouteInfo::EditUserMeSetting
         })
         .await
     }

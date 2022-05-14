@@ -46,6 +46,8 @@ pub struct CurrentUser {
     pub discriminator: u16,
     pub email: Option<String>,
     pub mfa_enabled: bool,
+    #[serde(rename = "phone")]
+    pub phone_number: Option<String>,
     #[serde(rename = "username")]
     pub name: String,
     pub verified: Option<bool>,

@@ -423,7 +423,7 @@ impl<'a> Future for ClientBuilder<'a> {
             let http = Arc::new(std::mem::take(&mut self.http));
 
             #[cfg(feature = "unstable_discord_api")]
-            if http.application_id == 0 {
+            if http.application_id == 0 && &http.token[..3] == "Bot" {
                 panic!("Please provide an Application Id in order to use interactions features.");
             }
 

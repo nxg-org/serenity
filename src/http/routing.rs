@@ -32,6 +32,12 @@ pub enum Route {
     ///
     /// [`ChannelId`]: crate::model::id::ChannelId
     ChannelsIdMessages(u64),
+    /// Route for the `/channels/:channel_id/interactions` path.
+    ///
+    /// The data is the relevant [`ChannelId`].
+    ///
+    /// [`ChannelId`]: crate::model::id::ChannelId
+    ChannelsIdInteractions(u64),
     /// Route for the `/channels/:channel_id/messages/bulk-delete` path.
     ///
     /// The data is the relevant [`ChannelId`].
@@ -170,6 +176,12 @@ pub enum Route {
     ///
     /// [`ChannelId`]: crate::model::id::ChannelId
     ChannelsIdMeJoindedArchivedPrivateThreads(u64),
+    /// Route for the `/channels/:channel_id/application-commands/search` path.
+    ///
+    /// The data is the relevant [`ChannelId`].
+    ///
+    /// [`ChannelId`]: crate::model::id::ChannelId
+    ChannelsApplicationCommands(u64),
     /// Route for the `/gateway` path.
     Gateway,
     /// Route for the `/gateway/bot` path.
@@ -547,6 +559,11 @@ impl Route {
         format!(api!("/channels/{}/messages{}"), channel_id, query.unwrap_or(""),)
     }
 
+    // #[cfg(feature = "unstable_discord_api")]
+    pub fn channel_interactions(channel_id: u64) -> String {
+        format!(api!("/channels/{}/interactions"), channel_id)
+    }
+
     pub fn channel_messages_bulk_delete(channel_id: u64) -> String {
         format!(api!("/channels/{}/messages/bulk-delete"), channel_id)
     }
@@ -651,6 +668,40 @@ impl Route {
 
         if let Some(limit) = limit {
             let _ = write!(s, "&limit={}", limit);
+        }
+
+        s
+    }
+
+    #[allow(clippy::let_underscore_must_use)]
+    // #[cfg(feature = "unstable_discord_api")]
+    pub fn channel_application_commands_search(
+        channel_id: u64,
+        kind: u8,
+        limit: Option<u64>,
+        command_ids: Option<&[u64]>,
+        application_id: Option<u64>,
+        include_applications: Option<bool>,
+    ) -> String {
+        let mut s =
+            format!(api!("/channels/{}/application-commands/search?type={}"), channel_id, kind);
+
+        if let Some(limit) = limit {
+            let _ = write!(s, "limit={}", limit);
+        }
+
+        if let Some(command_ids) = command_ids {
+            for command_id in command_ids {
+                let _ = write!(s, "&command_ids={}", command_id);
+            }
+        }
+
+        if let Some(application_id) = application_id {
+            let _ = write!(s, "&application_id={}", application_id);
+        }
+
+        if let Some(include_applications) = include_applications {
+            let _ = write!(s, "&include_applications={}", include_applications);
         }
 
         s
@@ -1141,12 +1192,17 @@ pub enum RouteInfo<'a> {
         interaction_id: u64,
         interaction_token: &'a str,
     },
+    #[cfg(feature = "unstable_discord_api")]
+    CreateInteractionInit {
+        channel_id: u64,
+    },
     CreateInvite {
         channel_id: u64,
     },
     CreateMessage {
         channel_id: u64,
     },
+
     CreatePermission {
         channel_id: u64,
         target_id: u64,
@@ -1421,6 +1477,15 @@ pub enum RouteInfo<'a> {
         channel_id: u64,
         before: Option<u64>,
         limit: Option<u64>,
+    },
+    #[cfg(feature = "unstable_discord_api")]
+    GetChannelApplicationCommands {
+        channel_id: u64,
+        kind: u8,
+        limit: Option<u64>,
+        command_ids: Option<&'a [u64]>,
+        application_id: Option<u64>,
+        include_applications: Option<bool>,
     },
     GetCurrentApplicationInfo,
     GetCurrentUser,
@@ -1781,6 +1846,14 @@ impl<'a> RouteInfo<'a> {
                 LightMethod::Post,
                 Route::GuildsIdIntegrationsId(guild_id),
                 Cow::from(Route::guild_integration(guild_id, integration_id)),
+            ),
+            #[cfg(feature = "unstable_discord_api")]
+            RouteInfo::CreateInteractionInit {
+                channel_id,
+            } => (
+                LightMethod::Post,
+                Route::ChannelsIdInteractions(channel_id),
+                Cow::from(Route::channel_interactions(channel_id)),
             ),
             #[cfg(feature = "unstable_discord_api")]
             RouteInfo::CreateInteractionResponse {
@@ -2366,6 +2439,19 @@ impl<'a> RouteInfo<'a> {
                 LightMethod::Get,
                 Route::ChannelsIdMeJoindedArchivedPrivateThreads(channel_id),
                 Cow::from(Route::channel_joined_private_threads(channel_id, before, limit)),
+            ),
+            #[cfg(feature = "unstable_discord_api")]
+            RouteInfo::GetChannelApplicationCommands {
+                channel_id,
+                kind,
+                limit,
+                command_ids,
+                application_id,
+                include_applications,
+            } => (
+                LightMethod::Get,
+                Route::ChannelsApplicationCommands(channel_id),
+                Cow::from(Route::channel_application_commands_search(channel_id, kind, limit, command_ids, application_id, include_applications))
             ),
             #[cfg(feature = "unstable_discord_api")]
             RouteInfo::GetFollowupMessage {
