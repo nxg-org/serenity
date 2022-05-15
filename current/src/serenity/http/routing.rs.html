@@ -2844,6 +2844,92 @@
 <span id="2839">2839</span>
 <span id="2840">2840</span>
 <span id="2841">2841</span>
+<span id="2842">2842</span>
+<span id="2843">2843</span>
+<span id="2844">2844</span>
+<span id="2845">2845</span>
+<span id="2846">2846</span>
+<span id="2847">2847</span>
+<span id="2848">2848</span>
+<span id="2849">2849</span>
+<span id="2850">2850</span>
+<span id="2851">2851</span>
+<span id="2852">2852</span>
+<span id="2853">2853</span>
+<span id="2854">2854</span>
+<span id="2855">2855</span>
+<span id="2856">2856</span>
+<span id="2857">2857</span>
+<span id="2858">2858</span>
+<span id="2859">2859</span>
+<span id="2860">2860</span>
+<span id="2861">2861</span>
+<span id="2862">2862</span>
+<span id="2863">2863</span>
+<span id="2864">2864</span>
+<span id="2865">2865</span>
+<span id="2866">2866</span>
+<span id="2867">2867</span>
+<span id="2868">2868</span>
+<span id="2869">2869</span>
+<span id="2870">2870</span>
+<span id="2871">2871</span>
+<span id="2872">2872</span>
+<span id="2873">2873</span>
+<span id="2874">2874</span>
+<span id="2875">2875</span>
+<span id="2876">2876</span>
+<span id="2877">2877</span>
+<span id="2878">2878</span>
+<span id="2879">2879</span>
+<span id="2880">2880</span>
+<span id="2881">2881</span>
+<span id="2882">2882</span>
+<span id="2883">2883</span>
+<span id="2884">2884</span>
+<span id="2885">2885</span>
+<span id="2886">2886</span>
+<span id="2887">2887</span>
+<span id="2888">2888</span>
+<span id="2889">2889</span>
+<span id="2890">2890</span>
+<span id="2891">2891</span>
+<span id="2892">2892</span>
+<span id="2893">2893</span>
+<span id="2894">2894</span>
+<span id="2895">2895</span>
+<span id="2896">2896</span>
+<span id="2897">2897</span>
+<span id="2898">2898</span>
+<span id="2899">2899</span>
+<span id="2900">2900</span>
+<span id="2901">2901</span>
+<span id="2902">2902</span>
+<span id="2903">2903</span>
+<span id="2904">2904</span>
+<span id="2905">2905</span>
+<span id="2906">2906</span>
+<span id="2907">2907</span>
+<span id="2908">2908</span>
+<span id="2909">2909</span>
+<span id="2910">2910</span>
+<span id="2911">2911</span>
+<span id="2912">2912</span>
+<span id="2913">2913</span>
+<span id="2914">2914</span>
+<span id="2915">2915</span>
+<span id="2916">2916</span>
+<span id="2917">2917</span>
+<span id="2918">2918</span>
+<span id="2919">2919</span>
+<span id="2920">2920</span>
+<span id="2921">2921</span>
+<span id="2922">2922</span>
+<span id="2923">2923</span>
+<span id="2924">2924</span>
+<span id="2925">2925</span>
+<span id="2926">2926</span>
+<span id="2927">2927</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">borrow::Cow</span>,
     <span class="ident">fmt</span>::{<span class="ident">Display</span>, <span class="ident">Write</span>},
@@ -2878,6 +2964,12 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`ChannelId`]: crate::model::id::ChannelId</span>
     <span class="ident">ChannelsIdMessages</span>(<span class="ident">u64</span>),
+    <span class="doccomment">/// Route for the `/channels/:channel_id/interactions` path.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The data is the relevant [`ChannelId`].</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`ChannelId`]: crate::model::id::ChannelId</span>
+    <span class="ident">ChannelsIdInteractions</span>(<span class="ident">u64</span>),
     <span class="doccomment">/// Route for the `/channels/:channel_id/messages/bulk-delete` path.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// The data is the relevant [`ChannelId`].</span>
@@ -3016,6 +3108,12 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`ChannelId`]: crate::model::id::ChannelId</span>
     <span class="ident">ChannelsIdMeJoindedArchivedPrivateThreads</span>(<span class="ident">u64</span>),
+    <span class="doccomment">/// Route for the `/channels/:channel_id/application-commands/search` path.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The data is the relevant [`ChannelId`].</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`ChannelId`]: crate::model::id::ChannelId</span>
+    <span class="ident">ChannelsApplicationCommands</span>(<span class="ident">u64</span>),
     <span class="doccomment">/// Route for the `/gateway` path.</span>
     <span class="ident">Gateway</span>,
     <span class="doccomment">/// Route for the `/gateway/bot` path.</span>
@@ -3393,6 +3491,11 @@
         <span class="macro">format!</span>(<span class="macro">api!</span>(<span class="string">&quot;/channels/{}/messages{}&quot;</span>), <span class="ident">channel_id</span>, <span class="ident">query</span>.<span class="ident">unwrap_or</span>(<span class="string">&quot;&quot;</span>),)
     }
 
+    <span class="comment">// #[cfg(feature = &quot;unstable_discord_api&quot;)]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">channel_interactions</span>(<span class="ident">channel_id</span>: <span class="ident">u64</span>) -&gt; <span class="ident">String</span> {
+        <span class="macro">format!</span>(<span class="macro">api!</span>(<span class="string">&quot;/channels/{}/interactions&quot;</span>), <span class="ident">channel_id</span>)
+    }
+
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">channel_messages_bulk_delete</span>(<span class="ident">channel_id</span>: <span class="ident">u64</span>) -&gt; <span class="ident">String</span> {
         <span class="macro">format!</span>(<span class="macro">api!</span>(<span class="string">&quot;/channels/{}/messages/bulk-delete&quot;</span>), <span class="ident">channel_id</span>)
     }
@@ -3497,6 +3600,40 @@
 
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">limit</span>) <span class="op">=</span> <span class="ident">limit</span> {
             <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="macro">write!</span>(<span class="ident">s</span>, <span class="string">&quot;&amp;limit={}&quot;</span>, <span class="ident">limit</span>);
+        }
+
+        <span class="ident">s</span>
+    }
+
+    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::let_underscore_must_use</span>)]</span>
+    <span class="comment">// #[cfg(feature = &quot;unstable_discord_api&quot;)]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">channel_application_commands_search</span>(
+        <span class="ident">channel_id</span>: <span class="ident">u64</span>,
+        <span class="ident">kind</span>: <span class="ident">u8</span>,
+        <span class="ident">limit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+        <span class="ident">command_ids</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u64</span>]<span class="op">&gt;</span>,
+        <span class="ident">application_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+        <span class="ident">include_applications</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
+    ) -&gt; <span class="ident">String</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">s</span> <span class="op">=</span>
+            <span class="macro">format!</span>(<span class="macro">api!</span>(<span class="string">&quot;/channels/{}/application-commands/search?type={}&quot;</span>), <span class="ident">channel_id</span>, <span class="ident">kind</span>);
+
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">limit</span>) <span class="op">=</span> <span class="ident">limit</span> {
+            <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="macro">write!</span>(<span class="ident">s</span>, <span class="string">&quot;limit={}&quot;</span>, <span class="ident">limit</span>);
+        }
+
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">command_ids</span>) <span class="op">=</span> <span class="ident">command_ids</span> {
+            <span class="kw">for</span> <span class="ident">command_id</span> <span class="kw">in</span> <span class="ident">command_ids</span> {
+                <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="macro">write!</span>(<span class="ident">s</span>, <span class="string">&quot;&amp;command_ids={}&quot;</span>, <span class="ident">command_id</span>);
+            }
+        }
+
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">application_id</span>) <span class="op">=</span> <span class="ident">application_id</span> {
+            <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="macro">write!</span>(<span class="ident">s</span>, <span class="string">&quot;&amp;application_id={}&quot;</span>, <span class="ident">application_id</span>);
+        }
+
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">include_applications</span>) <span class="op">=</span> <span class="ident">include_applications</span> {
+            <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="macro">write!</span>(<span class="ident">s</span>, <span class="string">&quot;&amp;include_applications={}&quot;</span>, <span class="ident">include_applications</span>);
         }
 
         <span class="ident">s</span>
@@ -3987,12 +4124,17 @@
         <span class="ident">interaction_id</span>: <span class="ident">u64</span>,
         <span class="ident">interaction_token</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>,
     },
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;unstable_discord_api&quot;</span>)]</span>
+    <span class="ident">CreateInteractionInit</span> {
+        <span class="ident">channel_id</span>: <span class="ident">u64</span>,
+    },
     <span class="ident">CreateInvite</span> {
         <span class="ident">channel_id</span>: <span class="ident">u64</span>,
     },
     <span class="ident">CreateMessage</span> {
         <span class="ident">channel_id</span>: <span class="ident">u64</span>,
     },
+
     <span class="ident">CreatePermission</span> {
         <span class="ident">channel_id</span>: <span class="ident">u64</span>,
         <span class="ident">target_id</span>: <span class="ident">u64</span>,
@@ -4267,6 +4409,15 @@
         <span class="ident">channel_id</span>: <span class="ident">u64</span>,
         <span class="ident">before</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
         <span class="ident">limit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+    },
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;unstable_discord_api&quot;</span>)]</span>
+    <span class="ident">GetChannelApplicationCommands</span> {
+        <span class="ident">channel_id</span>: <span class="ident">u64</span>,
+        <span class="ident">kind</span>: <span class="ident">u8</span>,
+        <span class="ident">limit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+        <span class="ident">command_ids</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u64</span>]<span class="op">&gt;</span>,
+        <span class="ident">application_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+        <span class="ident">include_applications</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
     },
     <span class="ident">GetCurrentApplicationInfo</span>,
     <span class="ident">GetCurrentUser</span>,
@@ -4627,6 +4778,14 @@
                 <span class="ident">LightMethod::Post</span>,
                 <span class="ident">Route::GuildsIdIntegrationsId</span>(<span class="ident">guild_id</span>),
                 <span class="ident">Cow::from</span>(<span class="ident">Route::guild_integration</span>(<span class="ident">guild_id</span>, <span class="ident">integration_id</span>)),
+            ),
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;unstable_discord_api&quot;</span>)]</span>
+            <span class="ident">RouteInfo::CreateInteractionInit</span> {
+                <span class="ident">channel_id</span>,
+            } =&gt; (
+                <span class="ident">LightMethod::Post</span>,
+                <span class="ident">Route::ChannelsIdInteractions</span>(<span class="ident">channel_id</span>),
+                <span class="ident">Cow::from</span>(<span class="ident">Route::channel_interactions</span>(<span class="ident">channel_id</span>)),
             ),
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;unstable_discord_api&quot;</span>)]</span>
             <span class="ident">RouteInfo::CreateInteractionResponse</span> {
@@ -5214,6 +5373,19 @@
                 <span class="ident">Cow::from</span>(<span class="ident">Route::channel_joined_private_threads</span>(<span class="ident">channel_id</span>, <span class="ident">before</span>, <span class="ident">limit</span>)),
             ),
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;unstable_discord_api&quot;</span>)]</span>
+            <span class="ident">RouteInfo::GetChannelApplicationCommands</span> {
+                <span class="ident">channel_id</span>,
+                <span class="ident">kind</span>,
+                <span class="ident">limit</span>,
+                <span class="ident">command_ids</span>,
+                <span class="ident">application_id</span>,
+                <span class="ident">include_applications</span>,
+            } =&gt; (
+                <span class="ident">LightMethod::Get</span>,
+                <span class="ident">Route::ChannelsApplicationCommands</span>(<span class="ident">channel_id</span>),
+                <span class="ident">Cow::from</span>(<span class="ident">Route::channel_application_commands_search</span>(<span class="ident">channel_id</span>, <span class="ident">kind</span>, <span class="ident">limit</span>, <span class="ident">command_ids</span>, <span class="ident">application_id</span>, <span class="ident">include_applications</span>))
+            ),
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;unstable_discord_api&quot;</span>)]</span>
             <span class="ident">RouteInfo::GetFollowupMessage</span> {
                 <span class="ident">application_id</span>,
                 <span class="ident">interaction_token</span>,
@@ -5686,5 +5858,5 @@
     }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="serenity" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.61.0-nightly (ee915c34e 2022-03-28)" ></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="serenity" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.62.0-nightly (70b3681bf 2022-05-14)" ></div>
 </body></html>
